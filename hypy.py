@@ -35,7 +35,7 @@ def ldf(file) :
     inds_t = [i for (i, val) in enumerate(y) if val > 0]
     y = [val for (i, val) in enumerate(y) if i in inds_t]
 
-    return x,y
+    return x,y 
 
 
 ###create a simple plot with x and y as entry

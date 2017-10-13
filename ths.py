@@ -268,7 +268,7 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         
         ax1.loglog(t, s, c='r',marker = '+', linestyle = '', label = 'drawdown')
         ax1.loglog(td, sd, c='b',marker = 'x', linestyle = '', label = 'Derivative')
-        ax1.loglog(hp.rpt.tc, hp.rpt.sc, c='g',   label = 'Theis (1935) Model')
+        ax1.loglog(tc, sc, c='g',   label = 'Theis (1935) Model')
         ax1.loglog(tdc, sdc, c='y',  label = 'Model derivative')
         ax1.grid(True)
 

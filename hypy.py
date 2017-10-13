@@ -8,12 +8,12 @@ Created on Wed Oct  4 14:48:39 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-import scipy as sp
-from scipy import interpolate as spi
 import hypy as hp
 from scipy.optimize import leastsq
+from scipy import interpolate as spi
 
-##### ldf : use a file and store the data in a vector x,y
+### function edit ###  
+#just show the values of your file
 def edit(file) : 
     x = np.loadtxt(file, usecols = 0)
     y = np.loadtxt(file, usecols = 1)
@@ -22,32 +22,53 @@ def edit(file) :
     return
 
 
+### function ldf ###
+#LDF Load a data file and remove points such that t<=0
+#
+# Syntax: [t,s] = ldf( 'fname.dat' )
+#
+#   fname = filename
+#   t     = time vector
+#   s     = drawdown vector
+#
+# Description: 
+#   ldf('filename.dat')is a hytool function designed for loading of data.
+#   It imports the first and the second column of the file “filename.dat” 
+#   into the variables t and s (p.e. time and drawdown).
+#
+# Example: 
+#   [t1,s1]=ldf('ths_ds1.dat')
+#
+# See also: trial, diagnostic, fit, ths_dmo
+
+
 def ldf(file) :
     
-    x = np.loadtxt(file, usecols = 0)
+    t = np.loadtxt(file, usecols = 0)
     #make sure the array contains only float
-    x = np.array(x)
-    x = np.asfarray(x, float)
+    t = np.array(t)
+    t = np.asfarray(t, float)
 
 #take only the positive values
-    inds_t = [i for (i, val) in enumerate(x) if val > 0]
-    x = [val for (i, val) in enumerate(x) if i in inds_t]
+    condition = np.greater(t,0)
+    
+    t = np.extract(condition,t)
     
     
-    y = np.loadtxt(file, usecols = 1)
+    
+    s = np.loadtxt(file, usecols = 1)
     
     #make sure the array contains only float
-    y = np.array(y)
-    y = np.asfarray(y, float)
+    s = np.array(s)
+    s = np.asfarray(s, float)
 
 #take only the positive values
-    inds_t = [i for (i, val) in enumerate(y) if val > 0]
-    y = [val for (i, val) in enumerate(y) if i in inds_t]
+    s = np.extract(condition,s)
     
-    return x,y
+    return t,s
 
-
-###create a simple plot with x and y as entry
+### function plot ###
+###create a simple plot with t and s as entry
 def plot(x,y):
     fig = plt.figure()
             
@@ -61,159 +82,171 @@ def plot(x,y):
             
     ax1.legend()                            #add the legend
             
-    plt.show(x,y)                              #show the plot
+    plt.show()                              #show the plot
 
 
-#if __name__ == "__main__":              #make the function works, no idea why
-#        plot()
+
 
 
 ##############Differential functions ##########################
 
+###function ldiff ###
 #LDIFF - Approximate logarithmic derivative with centered differences
-def ldiff(a,b):
-######################### For the time t
+#
+# Syntax: [xd,yd]=ldiff(x,y)
+#
+# See also: ldf, ldiffs, ldiffb, ldiffh
 
-
-#Calculate the difference
-    dx = np.diff(a)
-
-####################### For the drawdown s
+def ldiff(t,s):
 
 #Calculate the difference
-    dy = np.diff(b)
+    dx = np.diff(t)
+    dy = np.diff(s)
 
-####calculate the point
+#calculate the point
 
 #xd 
     xd = []
 
-    for i in range(0, len(a)-1):
-        xd.append( math.sqrt(a[i]*a[i+1]))
-
+    for i in range(0, len(t)-1):
+        xd.append( math.sqrt(t[i]*t[i+1]))
 
 #yd
+    
     yd = xd*(dy/dx)
+
     return xd,yd
 
-###plot
-def ldiff_plot(a,b):
-    xd,yd = ldiff(a,b)    
+### function ldiff_plot(t,s)
+#Makes the plot of the ldiff function
+
+def ldiff_plot(t,s):
+    xd,yd = ldiff(t,s)
+    
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
     ax2.set_xlabel('Time')
     ax2.set_ylabel('Drawdown and log derivative')
-    ax2.set_title('Drawdow, Derivative, Location, Northwest')
-    ax2.loglog(a, b, c='r', label = 'drawdown')
+    
+    ax2.loglog(t, s, c='r', label = 'drawdown')
     ax2.scatter(xd, yd, c='b', label = 'derivative')
     ax2.grid(True)
 
     ax2.legend()
     
-    plt.show(a,b)
+    plt.show()
 
 
     
-##ldiffs
-def ldiffs(a,b, npoints = 20):
-######################### For the time t
+### function ldiffs ###
+#LDIFFS - Approximate logarithmic derivative with Spline
+#
+# Syntax: [xd,yd] = ldiffs(x,y,[d])
+# 
+#   d = optional argument allowing to adjust the number of points 
+#        used in the Spline
+#
+# See also: ldf, ldiff, ldiffb, ldiffh
 
+def ldiffs(t,s, npoints = 20):
 
-    f = len(a)
-#    a = np.log10(a[f-1])
-
-
-
-
-
-####################### For the drawdown s
-
-#create w[], contains 1/standard deviation. it's use in the spline function
-#give a weight to the points of the graph 
-#(see documentation :https://docs.scipy.org/doc/scipy-0.19.1/reference/generated/scipy.interpolate.UnivariateSpline.html )
-
-    ysd = np.std(b)
-    ly = len(b)
-
-    w = []
-
-    for i in range(0, ly):
-        w.append(1/ysd)
-
-
+    f = len(t)
 #xi and yi
 #changing k,s and w affects the graph, make it better or worse
 
-    xi = np.logspace(np.log10(a[0]), np.log10(a[f-1]),  num = npoints, endpoint = True, base = 10.0, dtype = np.float64)
+    xi = np.logspace(np.log10(t[0]), np.log10(t[f-1]),  num = npoints, endpoint = True, base = 10.0, dtype = np.float64)
 
-    spl = spi.UnivariateSpline(a,b, k = 5, s = 0.0099)
+    spl = spi.UnivariateSpline(t,s, k = 5, s = 0.0099)
     yi = spl(xi)
 
 
     xd = xi[1:len(xi)-1]
     yd = xd*(yi[2:len(yi)+1]-yi[0:len(yi)-2])/(xi[2:len(xi)+1]-xi[0:len(xi)-2])
+    
     return xd,yd
-    #plot
+
+### function ldiffs_plot
+#Makes the plot of the ldiffs function
+
 def ldiffs_plot(a,b):
     xd,yd = ldiffs(a,b)    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
-    ax1.set_title('Drawdow, Derivative, Location, Northwest')
+    
     ax1.loglog(a, b, c='r', label = 'drawdown')
     ax1.scatter(xd, yd, c='b', label = 'derivative')
     ax1.grid(True)
 
     ax1.legend()
     
-    plt.show(a,b)
+    plt.show()
 
 
-###ldiffh
-def ldiffb(a,b, d = 2):
+###function ldiffb ###
+#LDIFFB - Approximate logarithmic derivative with Bourdet's formula
+#
+# Syntax: [xd,yd]=ldiffb(x,y[,d])
+#
+#   d = optional argument allowing to adjust the distance between 
+#       successive points to calculate the derivative.
+#
+# See also: ldf, ldiff, ldiffs, ldiffh
+
+def ldiffb(t,s, d = 2):
     ###transform the value of the array X into logarithms 
     logx = []
 
-    for i in range(0, len(a)):
-        logx.append(math.log(a[i]))
+    for i in range(0, len(t)):
+        logx.append(math.log(t[i]))
 
 
     dx = np.diff(logx)
     dx1 = dx[0:len(dx)-2*d+1]
-    dx2 = dx[3:len(dx)] ###########attention au 3, normalement c'est 1*d, mais ne donne pas le résultat attendu
+    dx2 = dx[2*d-1:len(dx)] 
 
-####################### For the drawdown s
 
-    dy = np.diff(b)
+    dy = np.diff(s)
     dy1 = dy[0:len(dx)-2*d+1]
-    dy2 = dy[3:len(dy)]
+    dy2 = dy[2*d-1:len(dy)]
 
 
 #xd and yd
 
-    xd = a[2:len(a)-2]
+    xd = t[2:len(s)-2]
     yd = (dx2*dy1/dx1+dx1*dy2/dx2)/(dx1+dx2)
+    
     return xd,yd
     
-    #plot
-def ldiffb_plot(a,b):
-    xd,yd = ldiffb(a,b)    
+###function ldiffd_plot ###
+#Makes the plot of the ldiffb function
+
+def ldiffb_plot(t,s):
+    xd,yd = ldiffb(t,s)    
+
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
-    ax1.set_title('Drawdow, Derivative, Location, Northwest')
-    ax1.loglog(a, b, c='r', label = 'drawdown')
+    
+    ax1.loglog(t, s, c='r', label = 'drawdown')
     ax1.scatter(xd, yd, c='b', label = 'derivative')
     ax1.grid(True)
 
     ax1.legend()
     
-    plt.show(a,b)
+    plt.show()
     
 
-###ldiffh
+###function ldiffh ###
+#LDIFFH - Approximate logarithmic derivative with Horne formula
+#
+# Syntax: [xd,yd]=ldiffh(t,s)
+#
+# See also: ldf, ldiff, ldiffb, ldiffs
+
+
 def ldiffh(t,s):
     #create the table t1,t2,t3 and s1,s2,s3
 
@@ -291,15 +324,18 @@ def ldiffh(t,s):
 
     xd = t2
     yd = d1+d2-d3
+    
     return xd,yd
-    #plot    
+#function ldiffh_plot ###
+#Makes the plot of the ldiffh function
+    
 def ldiffh_plot(t,s):
     xd,yd = ldiffh(t,s)    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
-    ax1.set_title('Drawdow, Derivative, Location, Northwest')
+    
     ax1.loglog(t, s, c='r', label = 'drawdown')
     ax1.scatter(xd, yd, c='b', label = 'derivative')
     ax1.grid(True)
@@ -307,6 +343,38 @@ def ldiffh_plot(t,s):
     ax1.legend()
     
     plt.show(t,s)
+
+
+###function diagnostic ###
+#DIAGNOSTIC Creates a diagnostic plot of the data
+#Syntax: diagnostic(t,s, mehtod,npoints,step)
+
+#npoints = optional argument allowing to adjust the 
+#number of points used in the Spline by default
+#or the distance between points depending on the option below
+#
+#method = optional argument allowing to select
+#different methods of computation of the derivative
+#
+#'spline' for spline resampling
+#in that case d is the number of points for the spline
+#
+#'direct' for direct derivation
+#in that case the value provided in the variable d is not used
+#
+#'bourdet' for the Bourdet et al. formula
+#in that case d is the lag distance used to compute the derivative
+#
+#Description:
+#This function allows to create rapidly a diagnostic plot
+#(i.e. a log-log plot of the drawdown as a function of time together with its logarithmic derivative) of the data. 
+#
+#Example: 
+#    diagnostic(t,s) 
+#    diagnostic(t,s,30) 
+#    diagnostic(t,s,20,'d') - in that case the number 20 is not used
+#              
+#See also: trial, ldf, ldiff, ldiffs, fit 
 
 def diagnostic(a,b, method = 'spline', npoints = 20, step = 2):
     if method == 'spline':
@@ -340,7 +408,30 @@ def hyclean(t,s):
     
     return t,s
 
-def trial(x,t,s, name = 'ths'):
+###function hyclean ###
+#TRIAL Display data and calculated solution together
+#
+#   Syntax:
+#      trial(x, t, s, name )          
+#   
+#      name = name of the solution
+#      x    = vector of parameters
+#      t,s  = data set
+#
+#   Description:
+#      The function trial allows to produce a graph that superposes data
+#      and a model. This can be used to test graphically the quality of a
+#      fit, or to adjust manually the parameters of a model until a
+#      satisfactory fit is obtained.
+#
+#   Example:
+#      trial(p,t,s,'ths')
+#      trial([0.1,1e-3],t,s, 'cls')
+#
+#   See also: ldf, diagnostic, fit, ths_dmo
+
+
+def trial(x,t,s, name):
     t,s = hyclean(t,s)
     td,sd = ldiffs(t,s, npoints=40)
     
@@ -376,10 +467,9 @@ def trial(x,t,s, name = 'ths'):
     
     ax1.grid(True)
 
-#    ax1.legend()
-    
     plt.show()
     
+
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('t')
@@ -391,8 +481,6 @@ def trial(x,t,s, name = 'ths'):
     ax1.semilogx(tdc,dsc, c = 'y', linestyle = '-.')
     
     ax1.grid(True)
-
-#    ax1.legend()
     
     plt.show()        
 
@@ -400,15 +488,12 @@ def trial(x,t,s, name = 'ths'):
 
 #FIT - Fit the model parameter of a given model.
 #
-# Syntax: p = fit( func, p0, t, s, option )          
+# Syntax: p = fit(p0, t, s, name)          
 #   
-#      func   = name of the solution
+#      name   = name of the solution
 #      p0     = vector of initial guess for the parameters
 #      t,s    = data set
-#      option = fitting option allowing to force the fit to all the data
-#               By default, the fit function is sampling the data set if it
-#               contains more than 150 data points.
-#
+#      
 #      p    = vector of the optimum set of parameters
 #
 # Description: 
@@ -422,21 +507,28 @@ def trial(x,t,s, name = 'ths'):
 #   p=fit('ths',p0,t,s)
 #
 # See also: ldf, diagnostic, trial
+
+def fit(p0,t,s,name):
     
-def residual(p0,t,s):
-    sc = hp.ths.dim(p0,t)
-    scs = []
+    def residual(p0,t,s,name):
+        if name == 'ths':
+            sc = hp.ths.dim(p0,t)
+            
+        scs = []
+        
+        for i in range(0, len(s)):
+            scs.append((sc[i]-s[i])**2)
+            
+        return scs
     
-    for i in range(0, len(s)):
-        scs.append((sc[i]-s[i])**2)
-   
-    return scs
+    def fit2(residual,p0,t,s):
+        p, x = leastsq(residual, p0, args = (t,s,name))
     
-def fit(residual,p0,t,s):
-    p, x = leastsq(residual, p0, args = (t,s))
+        return p
+    
+    p = fit2(residual, p0,t,s)
     
     return p
-    
     
     
     

@@ -504,7 +504,7 @@ def trial(x,t,s, name):
 #   until a local minimum is obtained.
 #   
 # Example:
-#   p=fit('ths',p0,t,s)
+#   p=fit(p0,t,s,'ths')
 #
 # See also: ldf, diagnostic, trial
 

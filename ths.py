@@ -190,12 +190,12 @@ def jac(p,t):
 
     j = [j1,j2]   
 
-    return j ##pas sûr
+    return j 
 
 ###unfction rpt ###
 
 #THS_RPT - Reports graphically the results of a pumping test interpreted with the Theis (1935) model. 
-# Syntax: ths_rpt( p, t, s, d, ttle )
+# Syntax: ths_rpt( p, t, s, d, name, ttle, Author, Rapport, filetype )
 # p = parameters of the model 
 # p(1) = a = slope of the straight line
 # p(2) = t0 = intercept with the horizontal axis for s = 0                                                                                        
@@ -207,7 +207,7 @@ def jac(p,t):
 #     Produces the final figure and results for Theis model (1935).
 #See also: ths_dmo, ths_dim, ths_gss
 
-def rpt(p,t,s,d, ttle = 'Interference test', Name = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
+def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     #rename the parameters for a more intuitive check of the formulas
     a = p[0]
     t0 = p[1]
@@ -221,28 +221,11 @@ def rpt(p,t,s,d, ttle = 'Interference test', Name = 'My name',  Rapport = 'My Ra
 
     
     #Calls an internalscript that computes drawdown, derivative and residuals
-    ##Here is the rpt_cmp script
-    #keep only the positive time
-    t,s = hp.hyclean(t,s)
-    #define regular points to plot the calculated drawdown
-    tc = np.logspace(np.log10(t[0]), np.log10(t[len(t)-1]),  num = len(t), endpoint = True, base = 10.0, dtype = np.float64)
+    #script rpt.cmp    
     
-    #compute the drawdown with the model
-    sc = hp.ths.dim(p,tc)
+    tc,sc,mr,sr,rms = hp.rpt.cmp(p,t,s,name)
+
     
-    #keep only the positive drawdown
-    tc,sc = hp.hyclean(tc,sc)
-    
-    #Compute the residuals and their statistics
-    residuals = s - hp.ths.dim(p,t)
-    mr = np.mean(residuals)
-    sr = 2 * np.nanstd(residuals)
-    rms = math.sqrt(np.mean(residuals**2))
-    
-    
-    ###end of the script rpt_cmp
-    
-    ###Making the plot. might have to change some of the things
     
     #script rpt_plt
     
@@ -261,7 +244,7 @@ def rpt(p,t,s,d, ttle = 'Interference test', Name = 'My name',  Rapport = 'My Ra
         
         fig = plt.figure()
         fig.set_size_inches(8, 6)
-        fig.text(0.125, 1, Name, fontsize=14, transform=plt.gcf().transFigure) 
+        fig.text(0.125, 1, Author, fontsize=14, transform=plt.gcf().transFigure) 
         fig.text(0.125, 0.95, Rapport, fontsize=14, transform=plt.gcf().transFigure)
 
         fig.text(0.125, -0.05, 'Test Data : ', fontsize=14, transform=plt.gcf().transFigure)
@@ -285,7 +268,7 @@ def rpt(p,t,s,d, ttle = 'Interference test', Name = 'My name',  Rapport = 'My Ra
         
         ax1.loglog(t, s, c='r',marker = '+', linestyle = '', label = 'drawdown')
         ax1.loglog(td, sd, c='b',marker = 'x', linestyle = '', label = 'Derivative')
-        ax1.loglog(tc, sc, c='g',   label = 'Theis (1935) Model')
+        ax1.loglog(hp.rpt.tc, hp.rpt.sc, c='g',   label = 'Theis (1935) Model')
         ax1.loglog(tdc, sdc, c='y',  label = 'Model derivative')
         ax1.grid(True)
 
@@ -297,7 +280,7 @@ def rpt(p,t,s,d, ttle = 'Interference test', Name = 'My name',  Rapport = 'My Ra
     if filetype == 'img':
         fig = plt.figure()
         fig.set_size_inches(8, 6)
-        fig.text(0.125, 1, Name, fontsize=14, transform=plt.gcf().transFigure) 
+        fig.text(0.125, 1, Author, fontsize=14, transform=plt.gcf().transFigure) 
         fig.text(0.125, 0.95, Rapport, fontsize=14, transform=plt.gcf().transFigure)  
         
         fig.text(1, 0.85, 'Test Data : ', fontsize=14, transform=plt.gcf().transFigure)

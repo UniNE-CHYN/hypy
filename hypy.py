@@ -13,8 +13,9 @@ from scipy.optimize import leastsq
 from scipy import interpolate as spi
 
 ### function edit ###  
-#just show the values of your file
+
 def edit(file) : 
+    '''just show the values of your file'''
     x = np.loadtxt(file, usecols = 0)
     y = np.loadtxt(file, usecols = 1)
     print(x)
@@ -23,26 +24,27 @@ def edit(file) :
 
 
 ### function ldf ###
-#LDF Load a data file and remove points such that t<=0
-#
-# Syntax: [t,s] = ldf( 'fname.dat' )
-#
-#   fname = filename
-#   t     = time vector
-#   s     = drawdown vector
-#
-# Description: 
-#   ldf('filename.dat')is a hytool function designed for loading of data.
-#   It imports the first and the second column of the file “filename.dat” 
-#   into the variables t and s (p.e. time and drawdown).
-#
-# Example: 
-#   [t1,s1]=ldf('ths_ds1.dat')
-#
-# See also: trial, diagnostic, fit, ths_dmo
 
 
 def ldf(file) :
+    '''LDF Load a data file and remove points such that t<=0
+
+ Syntax: [t,s] = ldf( 'fname.dat' )
+
+   fname = filename
+   t     = time vector
+   s     = drawdown vector
+
+ Description: 
+   ldf('filename.dat')is a hytool function designed for loading of data.
+   It imports the first and the second column of the file “filename.dat” 
+   into the variables t and s (p.e. time and drawdown).
+
+ Example: 
+   [t1,s1]=ldf('ths_ds1.dat')
+
+ See also: trial, diagnostic, fit, ths_dmo
+'''
     
     t = np.loadtxt(file, usecols = 0)
     #make sure the array contains only float
@@ -68,8 +70,9 @@ def ldf(file) :
     return t,s
 
 ### function plot ###
-###create a simple plot with t and s as entry
+
 def plot(x,y):
+    '''create a simple plot with t and s as entry'''
     fig = plt.figure()
             
     ax1 = fig.add_subplot(111)
@@ -91,13 +94,14 @@ def plot(x,y):
 ##############Differential functions ##########################
 
 ###function ldiff ###
-#LDIFF - Approximate logarithmic derivative with centered differences
-#
-# Syntax: [xd,yd]=ldiff(x,y)
-#
-# See also: ldf, ldiffs, ldiffb, ldiffh
+
 
 def ldiff(t,s):
+    '''LDIFF - Approximate logarithmic derivative with centered differences
+
+ Syntax: [xd,yd]=ldiff(x,y)
+
+ See also: ldf, ldiffs, ldiffb, ldiffh'''
 
 #Calculate the difference
     dx = np.diff(t)
@@ -118,9 +122,10 @@ def ldiff(t,s):
     return xd,yd
 
 ### function ldiff_plot(t,s)
-#Makes the plot of the ldiff function
+
 
 def ldiff_plot(t,s):
+    '''Makes the plot of the ldiff function'''
     xd,yd = ldiff(t,s)
     
     fig2 = plt.figure()
@@ -139,16 +144,17 @@ def ldiff_plot(t,s):
 
     
 ### function ldiffs ###
-#LDIFFS - Approximate logarithmic derivative with Spline
-#
-# Syntax: [xd,yd] = ldiffs(x,y,[d])
-# 
-#   d = optional argument allowing to adjust the number of points 
-#        used in the Spline
-#
-# See also: ldf, ldiff, ldiffb, ldiffh
+
 
 def ldiffs(t,s, npoints = 20):
+    '''#LDIFFS - Approximate logarithmic derivative with Spline
+
+ Syntax: [xd,yd] = ldiffs(x,y,[d])
+ 
+   d = optional argument allowing to adjust the number of points 
+        used in the Spline
+
+ See also: ldf, ldiff, ldiffb, ldiffh'''
 
     f = len(t)
 #xi and yi
@@ -166,9 +172,10 @@ def ldiffs(t,s, npoints = 20):
     return xd,yd
 
 ### function ldiffs_plot
-#Makes the plot of the ldiffs function
+
 
 def ldiffs_plot(a,b):
+    '''Makes the plot of the ldiffs function'''
     xd,yd = ldiffs(a,b)    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
@@ -185,16 +192,17 @@ def ldiffs_plot(a,b):
 
 
 ###function ldiffb ###
-#LDIFFB - Approximate logarithmic derivative with Bourdet's formula
-#
-# Syntax: [xd,yd]=ldiffb(x,y[,d])
-#
-#   d = optional argument allowing to adjust the distance between 
-#       successive points to calculate the derivative.
-#
-# See also: ldf, ldiff, ldiffs, ldiffh
+
 
 def ldiffb(t,s, d = 2):
+    '''#LDIFFB - Approximate logarithmic derivative with Bourdet's formula
+
+ Syntax: [xd,yd]=ldiffb(x,y[,d])
+
+   d = optional argument allowing to adjust the distance between 
+       successive points to calculate the derivative.
+
+ See also: ldf, ldiff, ldiffs, ldiffh'''
     ###transform the value of the array X into logarithms 
     logx = []
 
@@ -220,9 +228,10 @@ def ldiffb(t,s, d = 2):
     return xd,yd
     
 ###function ldiffd_plot ###
-#Makes the plot of the ldiffb function
+
 
 def ldiffb_plot(t,s):
+    '''Makes the plot of the ldiffb function'''
     xd,yd = ldiffb(t,s)    
 
     fig = plt.figure()
@@ -240,14 +249,15 @@ def ldiffb_plot(t,s):
     
 
 ###function ldiffh ###
-#LDIFFH - Approximate logarithmic derivative with Horne formula
-#
-# Syntax: [xd,yd]=ldiffh(t,s)
-#
-# See also: ldf, ldiff, ldiffb, ldiffs
+
 
 
 def ldiffh(t,s):
+    '''#LDIFFH - Approximate logarithmic derivative with Horne formula
+
+ Syntax: [xd,yd]=ldiffh(t,s)
+
+ See also: ldf, ldiff, ldiffb, ldiffs'''
     #create the table t1,t2,t3 and s1,s2,s3
 
     endt = len(t)
@@ -327,9 +337,10 @@ def ldiffh(t,s):
     
     return xd,yd
 #function ldiffh_plot ###
-#Makes the plot of the ldiffh function
+
     
 def ldiffh_plot(t,s):
+    '''Makes the plot of the ldiffh function'''
     xd,yd = ldiffh(t,s)    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
@@ -346,37 +357,39 @@ def ldiffh_plot(t,s):
 
 
 ###function diagnostic ###
-#DIAGNOSTIC Creates a diagnostic plot of the data
-#Syntax: diagnostic(t,s, mehtod,npoints,step)
 
-#npoints = optional argument allowing to adjust the 
-#number of points used in the Spline by default
-#or the distance between points depending on the option below
-#
-#method = optional argument allowing to select
-#different methods of computation of the derivative
-#
-#'spline' for spline resampling
-#in that case d is the number of points for the spline
-#
-#'direct' for direct derivation
-#in that case the value provided in the variable d is not used
-#
-#'bourdet' for the Bourdet et al. formula
-#in that case d is the lag distance used to compute the derivative
-#
-#Description:
-#This function allows to create rapidly a diagnostic plot
-#(i.e. a log-log plot of the drawdown as a function of time together with its logarithmic derivative) of the data. 
-#
-#Example: 
-#    diagnostic(t,s) 
-#    diagnostic(t,s,30) 
-#    diagnostic(t,s,20,'d') - in that case the number 20 is not used
-#              
-#See also: trial, ldf, ldiff, ldiffs, fit 
 
 def diagnostic(a,b, method = 'spline', npoints = 20, step = 2):
+    '''DIAGNOSTIC Creates a diagnostic plot of the data
+Syntax: diagnostic(t,s, mehtod,npoints,step)
+
+npoints = optional argument allowing to adjust the 
+number of points used in the Spline by default
+or the distance between points depending on the option below
+
+method = optional argument allowing to select
+different methods of computation of the derivative
+
+'spline' for spline resampling
+in that case d is the number of points for the spline
+
+'direct' for direct derivation
+in that case the value provided in the variable d is not used
+
+'bourdet' for the Bourdet et al. formula
+in that case d is the lag distance used to compute the derivative
+
+Description:
+This function allows to create rapidly a diagnostic plot
+(i.e. a log-log plot of the drawdown as a function of time together with its logarithmic derivative) of the data. 
+
+Example: 
+    diagnostic(t,s) 
+    diagnostic(t,s,30) 
+    diagnostic(t,s,20,'d') - in that case the number 20 is not used
+             
+See also: trial, ldf, ldiff, ldiffs, fit '''
+
     if method == 'spline':
         ldiffs_plot(a,b)
     elif method == 'direct' : 
@@ -390,48 +403,51 @@ def diagnostic(a,b, method = 'spline', npoints = 20, step = 2):
     
 ##function hyclean ###
 
-#HYCLEAN - Take only the values that are finite and strictly positive time
-#                
-# Syntax: [tc,sc] = hyclean( t,s )
-#
-# Description:
-#   Take only the values that are finite and strictly positive time 
-#          
-# Example:
-#   [tc,sc] = hyclean( t,s )
-#
-# See also: hyselect, hysampling, hyfilter, hyplot
+
 def hyclean(t,s):
+    '''HYCLEAN - Take only the values that are finite and strictly positive time
+                
+ Syntax: [tc,sc] = hyclean( t,s )
+
+ Description:
+   Take only the values that are finite and strictly positive time 
+          
+ Example:
+   [tc,sc] = hyclean( t,s )
+
+ See also: hyselect, hysampling, hyfilter, hyplot'''
+    
     condition = np.logical_and(np.isfinite(s), np.greater(s,0))
     s = np.extract(condition,s)
     t = np.extract(condition, t)
     
     return t,s
 
-###function hyclean ###
-#TRIAL Display data and calculated solution together
-#
-#   Syntax:
-#      trial(x, t, s, name )          
-#   
-#      name = name of the solution
-#      x    = vector of parameters
-#      t,s  = data set
-#
-#   Description:
-#      The function trial allows to produce a graph that superposes data
-#      and a model. This can be used to test graphically the quality of a
-#      fit, or to adjust manually the parameters of a model until a
-#      satisfactory fit is obtained.
-#
-#   Example:
-#      trial(p,t,s,'ths')
-#      trial([0.1,1e-3],t,s, 'cls')
-#
-#   See also: ldf, diagnostic, fit, ths_dmo
-
+###function trial ###
+    
 
 def trial(x,t,s, name):
+    '''TRIAL Display data and calculated solution together
+
+       Syntax:
+           trial(x, t, s, name )          
+   
+          name = name of the solution
+          x    = vector of parameters
+          t,s  = data set
+
+       Description:
+           The function trial allows to produce a graph that superposes data
+           and a model. This can be used to test graphically the quality of a
+           fit, or to adjust manually the parameters of a model until a
+           satisfactory fit is obtained.
+
+       Example:
+           trial(p,t,s,'ths')
+           trial([0.1,1e-3],t,s, 'cls')
+
+
+       See also: ldf, diagnostic, fit, ths_dmo'''
     t,s = hyclean(t,s)
     td,sd = ldiffs(t,s, npoints=40)
     
@@ -439,6 +455,8 @@ def trial(x,t,s, name):
     
     if name == 'ths' :
         sc = hp.ths.dim(x,tplot)
+    if name == 'Del' :
+        sc = hp.Del.dim(x,tplot)
     
     
     tdc,dsc = ldiff(tplot,sc)
@@ -486,7 +504,10 @@ def trial(x,t,s, name):
 
 ###function fit ###
 
-#FIT - Fit the model parameter of a given model.
+
+
+def fit(p0,t,s,name):
+    '''FIT - Fit the model parameter of a given model.
 #
 # Syntax: p = fit(p0, t, s, name)          
 #   
@@ -506,13 +527,13 @@ def trial(x,t,s, name):
 # Example:
 #   p=fit(p0,t,s,'ths')
 #
-# See also: ldf, diagnostic, trial
-
-def fit(p0,t,s,name):
+# See also: ldf, diagnostic, trial'''
     
     def residual(p0,t,s,name):
         if name == 'ths':
             sc = hp.ths.dim(p0,t)
+        if name == 'Del' :
+            sc = hp.Del.dim(p0,t)
             
         scs = []
         

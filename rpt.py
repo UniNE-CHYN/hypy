@@ -31,7 +31,8 @@ def cmp(p,t,s,name):
     #compute the drawdown with the model
     if name == 'ths':
         sc = hp.ths.dim(p,tc)
-    
+    if name == 'Del' : 
+        sc = hp.Del.dim(p,tc)
     #keep only the positive drawdown
     tc,sc = hp.hyclean(tc,sc)
     
@@ -42,3 +43,5 @@ def cmp(p,t,s,name):
     rms = math.sqrt(np.mean(residuals**2))
 
     return tc,sc,mr,sr,rms
+
+

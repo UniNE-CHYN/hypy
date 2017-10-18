@@ -18,41 +18,42 @@ import matplotlib.pyplot as plt
 
 ####function dim ###
 
-#THS_DIM - Compute drawdown with the Theis (1935) solution
-#
-# Syntax: s = ths_dim( p, t) 
-#
-#   p(1) = a  = slope of Jacob Straight Line in meters
-#   p(2) = t0 = intercept with the horizontal axis for s = 0
-#   t = measured time
-#   s = measured drawdown
-#
-# Description:
-#   The Theis (1935) solution assumes that the aquifer is confined,
-#   homogeneous, isotropic, and infinite. The well as radius that is
-#   negligible. It is pumped at a constant rate Q and is 100 percent
-#   efficient.   
-#
-#   Under these assumptions, Theis solution can be expressed as: 
-#
-#       s(r,t) = Q/(4 pi T) E1( r2S / 4Tt)
-#
-#   where Q is the pumping rate, T the transmissivity, r the radial 
-#   distance between the pumping well and the observation well, 
-#   S the storativity coefficient and t the time.  
-#
-#   To interpret field data with the Theis solution, it is expressed as a
-#   function of two fitting parameters a and to which are defined as:   
-#
-#   a = 0.183 Q /T
-#   t0 =  r2 S / 2.25 T 
-#
-# Example:
-#   s = ths_dim( p,t )
-#
-# See also: ths_dmo, ths_gss, ths_rpt
+
 
 def dim(p,t):
+    '''THS_DIM - Compute drawdown with the Theis (1935) solution
+
+ Syntax: s = ths_dim( p, t) 
+
+   p(1) = a  = slope of Jacob Straight Line in meters
+   p(2) = t0 = intercept with the horizontal axis for s = 0
+   t = measured time
+   s = measured drawdown
+
+ Description:
+   The Theis (1935) solution assumes that the aquifer is confined,
+   homogeneous, isotropic, and infinite. The well as radius that is
+   negligible. It is pumped at a constant rate Q and is 100 percent
+   efficient.   
+
+   Under these assumptions, Theis solution can be expressed as: 
+
+       s(r,t) = Q/(4 pi T) E1( r2S / 4Tt)
+
+   where Q is the pumping rate, T the transmissivity, r the radial 
+   distance between the pumping well and the observation well, 
+   S the storativity coefficient and t the time.  
+
+   To interpret field data with the Theis solution, it is expressed as a
+   function of two fitting parameters a and to which are defined as:   
+
+   a = 0.183 Q /T
+   t0 =  r2 S / 2.25 T 
+
+ Example:
+   s = ths_dim( p,t )
+
+ See also: ths_dmo, ths_gss, ths_rpt'''
     td = []
     for i in range(0, len(t)):
         td.append(0.5628*p[1]/t[i])
@@ -66,19 +67,20 @@ def dim(p,t):
 
 ####function dls ###
 
-#THS_DLS - Dimensionless drawdown of the Theis model
-#
-# Syntax: [sd,dd] = ths_dls(td)
-#
-# Description:
-#   Calculates the dimensionless drawdown sd and the dimensionless 
-#   derivative dd for a given dimensionless reduced time td/rd^2
-#
-# See also: ths_lap
+
 
 
 
 def dls(td):
+    '''THS_DLS - Dimensionless drawdown of the Theis model
+
+ Syntax: [sd,dd] = ths_dls(td)
+
+ Description:
+   Calculates the dimensionless drawdown sd and the dimensionless 
+   derivative dd for a given dimensionless reduced time td/rd^2
+
+ See also: ths_lap'''
     td2 = []
     dd = []
     for i in range(0, len(td)):
@@ -92,16 +94,17 @@ def dls(td):
 
 ####function drw ###
 
-#THS_DRW - Type curves of the Theis model.
-#
-# Syntax: ths_drw()
-#
-# Description:
-#   Draw a series of type curves of Theis (1935)
-#
-# See also: ths_dim, ths_dls
 
 def drw():
+    '''THS_DRW - Type curves of the Theis model.
+
+ Syntax: ths_drw()
+
+ Description:
+   Draw a series of type curves of Theis (1935)
+
+ See also: ths_dim, ths_dls
+'''
 
     td = np.logspace(-1, 4)
     sd, dd = dls(td)
@@ -110,8 +113,8 @@ def drw():
     ax1 = fig.add_subplot(111)
 
        
-    ax1.set_xlabel('tD/r²D = Tt / S r²')       ###Nom des axes à améliorer
-    ax1.set_ylabel('sD = 2*pi*s/Q')    
+    ax1.set_xlabel(r'$t_{D}/r²_{D} = T t / S r²$')
+    ax1.set_ylabel(r'$s_{D} = 2*\pi*s/Q$')    
                                                  
     ax1.loglog(td,sd, c='b', label='Theis') 
     ax1.plot(td,dd, c='r', linestyle = '--', label='Derivative')        
@@ -124,8 +127,8 @@ def drw():
     ax2 = fig2.add_subplot(111)
 
         
-    ax2.set_ylabel('Sd')       
-    ax2.set_xlabel('td/r²d')    ####nom des axes à améliorer
+    ax2.set_xlabel(r'$t_{D}/r²_{D}$')    
+    ax2.set_ylabel(r'$s_{D}$')     
     
     ax2.semilogx(td,sd, c='b', linestyle = '--', label='Theis') 
     ax2.plot(td,sj, c='r', label='Jacob')        
@@ -135,21 +138,23 @@ def drw():
 
 ### function gss ###
 
-#THS_GSS - First guess for the parameters of the Theis model.
-#
-# Syntax:  p = ths_gss(t,s)
-#
-#   p(1) = a  = slope of Jacob straight line for late time
-#   p(2) = t0 = intercept with the horizontal axis for s = 0
-#   t    = time
-#   s    = drawdown
-#
-# Description:
-#   First guess for the parameters of theis solution
-#
-# See also: ths_dim, ths_dmo, ths_rpt, ezwt
+
 
 def gss(t,s):
+    '''THS_GSS - First guess for the parameters of the Theis model.
+
+ Syntax:  p = ths_gss(t,s)
+
+   p(1) = a  = slope of Jacob straight line for late time
+   p(2) = t0 = intercept with the horizontal axis for s = 0
+   t    = time
+   s    = drawdown
+
+ Description:
+   First guess for the parameters of theis solution
+
+ See also: ths_dim, ths_dmo, ths_rpt, ezwt'''
+
     if np.shape(t) == 1:
         t = np.transpose(t)
         s = np.transpose(s) #contrôler si c'est ce qui est souhaité
@@ -168,14 +173,15 @@ def gss(t,s):
 
 ### function jac ###
 
-#THS_JAC - Jacobian matrix of the Theis function
-#
-# Syntax: j = ths_jac( p, t)
-#
-#    j(1,:) = ds / dp(1) 
-#    j(2,:) = ds / dp(2)
 
 def jac(p,t):
+    '''THS_JAC - Jacobian matrix of the Theis function
+
+ Syntax: j = ths_jac( p, t)
+
+    j(1,:) = ds / dp(1) 
+    j(2,:) = ds / dp(2)
+'''
     td = []
     for i in range(0, len(t)):
         td.append(0.5625*p[1]/t[i])
@@ -194,20 +200,22 @@ def jac(p,t):
 
 ###unfction rpt ###
 
-#THS_RPT - Reports graphically the results of a pumping test interpreted with the Theis (1935) model. 
-# Syntax: ths_rpt( p, t, s, d, name, ttle, Author, Rapport, filetype )
-# p = parameters of the model 
-# p(1) = a = slope of the straight line
-# p(2) = t0 = intercept with the horizontal axis for s = 0                                                                                        
-# t = measured time % s = measured drawdown 
-# d(1) = q = Pumping rate 
-# d(2) = r = distance from the pumping well 
-# ttle = Title of the figure 
-# Description: 
-#     Produces the final figure and results for Theis model (1935).
-#See also: ths_dmo, ths_dim, ths_gss
+
 
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
+    '''THS_RPT - Reports graphically the results of a pumping test interpreted with the Theis (1935) model. 
+ Syntax: ths_rpt( p, t, s, d, name, ttle, Author, Rapport, filetype )
+ p = parameters of the model 
+ p(1) = a = slope of the straight line
+ p(2) = t0 = intercept with the horizontal axis for s = 0                                                                                        
+ t = measured time % s = measured drawdown 
+ d(1) = q = Pumping rate 
+ d(2) = r = distance from the pumping well 
+ ttle = Title of the figure 
+ Description: 
+     Produces the final figure and results for Theis model (1935).
+See also: ths_dmo, ths_dim, ths_gss'''
+    
     #rename the parameters for a more intuitive check of the formulas
     a = p[0]
     t0 = p[1]
@@ -223,7 +231,24 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
     #Calls an internalscript that computes drawdown, derivative and residuals
     #script rpt.cmp    
     
-    tc,sc,mr,sr,rms = hp.rpt.cmp(p,t,s,name)
+    #keep only the positive time
+    t,s = hp.hyclean(t,s)
+    #define regular points to plot the calculated drawdown
+    tc = np.logspace(np.log10(t[0]), np.log10(t[len(t)-1]),  num = len(t), endpoint = True, base = 10.0, dtype = np.float64)
+    
+    #compute the drawdown with the model
+    if name == 'ths':
+        sc = hp.ths.dim(p,tc)
+    if name == 'Del' : 
+        sc = hp.Del.dim(p,tc)
+    #keep only the positive drawdown
+    tc,sc = hp.hyclean(tc,sc)
+    
+    #Compute the residuals and their statistics
+    residuals = s - hp.ths.dim(p,t)
+    mr = np.mean(residuals)
+    sr = 2 * np.nanstd(residuals)
+    rms = math.sqrt(np.mean(residuals**2))
 
     
     
@@ -258,7 +283,7 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         fig.text(0.135, -0.55, 'slope a : {:0.2g} m '.format(a) , fontsize=14, transform=plt.gcf().transFigure)
         fig.text(0.135, -0.60, 'intercept t0 : {:0.2g} m'.format(t0) , fontsize=14, transform=plt.gcf().transFigure)
         fig.text(0.135, -0.65, 'mean residual : {:0.2g} m'.format(mr) , fontsize=14, transform=plt.gcf().transFigure)
-        fig.text(0.135, -0.70, '2 standart deviation : {:0.2g} m'.format(sr) , fontsize=14, transform=plt.gcf().transFigure)
+        fig.text(0.135, -0.70, '2 standard deviation : {:0.2g} m'.format(sr) , fontsize=14, transform=plt.gcf().transFigure)
 
 
         ax1 = fig.add_subplot(111)
@@ -294,7 +319,7 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         fig.text(1.05, 0.35, 'slope a : {:0.2g} m '.format(a) , fontsize=14, transform=plt.gcf().transFigure)
         fig.text(1.05, 0.3, 'intercept t0 : {:0.2g} m'.format(t0) , fontsize=14, transform=plt.gcf().transFigure)
         fig.text(1.05, 0.25, 'mean residual : {:0.2g} m'.format(mr) , fontsize=14, transform=plt.gcf().transFigure)
-        fig.text(1.05, 0.2, '2 standart deviation : {:0.2g} m'.format(sr) , fontsize=14, transform=plt.gcf().transFigure)        
+        fig.text(1.05, 0.2, '2 standard deviation : {:0.2g} m'.format(sr) , fontsize=14, transform=plt.gcf().transFigure)        
 
         ax1 = fig.add_subplot(111)
         ax1.set_xlabel('Time in seconds')
@@ -312,3 +337,25 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         plt.show()
         fig.savefig('ths_rapport.png', bbox_inches = 'tight')
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

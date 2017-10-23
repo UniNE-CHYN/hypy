@@ -12,16 +12,6 @@ import hypy as hp
 from scipy.optimize import leastsq
 from scipy import interpolate as spi
 
-### function edit ###  
-
-def edit(file) : 
-    '''just show the values of your file'''
-    x = np.loadtxt(file, usecols = 0)
-    y = np.loadtxt(file, usecols = 1)
-    print(x)
-    print(y)
-    return
-
 
 ### function ldf ###
 
@@ -77,7 +67,6 @@ def plot(x,y):
             
     ax1 = fig.add_subplot(111)
 
-    ax1.set_title("The Fetter Data set")    #define the title
     ax1.set_xlabel('Time in seconds')       #define the xlabel
     ax1.set_ylabel('Drawdown in meters')    #define the ylabel
                                                  

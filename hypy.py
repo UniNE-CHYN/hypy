@@ -65,7 +65,7 @@ def plot(x,y):
     '''create a simple plot with t and s as entry'''
     fig = plt.figure()
             
-   ax1 = fig.add_subplot(111)
+    ax1 = fig.add_subplot(111)
 
     ax1.set_xlabel('Time in seconds')       #define the xlabel
     ax1.set_ylabel('Drawdown in meters')    #define the ylabel

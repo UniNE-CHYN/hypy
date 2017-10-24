@@ -13,6 +13,7 @@ import hypy as hp
 import matplotlib.pyplot as plt
 
 
+
 ###Contains all the functions of the module ths####
 
 
@@ -231,26 +232,8 @@ See also: ths_dmo, ths_dim, ths_gss'''
     #Calls an internalscript that computes drawdown, derivative and residuals
     #script rpt.cmp    
     
-    #keep only the positive time
-    t,s = hp.hyclean(t,s)
-    #define regular points to plot the calculated drawdown
-    tc = np.logspace(np.log10(t[0]), np.log10(t[len(t)-1]),  num = len(t), endpoint = True, base = 10.0, dtype = np.float64)
-    
-    #compute the drawdown with the model
-    if name == 'ths':
-        sc = hp.ths.dim(p,tc)
-    if name == 'Del' : 
-        sc = hp.Del.dim(p,tc)
-    #keep only the positive drawdown
-    tc,sc = hp.hyclean(tc,sc)
-    
-    #Compute the residuals and their statistics
-    residuals = s - hp.ths.dim(p,t)
-    mr = np.mean(residuals)
-    sr = 2 * np.nanstd(residuals)
-    rms = math.sqrt(np.mean(residuals**2))
 
-    
+    tc,sc,mr,sr,rms = hp.script.cmp(p,t,s,'ths')
     
     #script rpt_plt
     
@@ -336,6 +319,29 @@ See also: ths_dmo, ths_dim, ths_gss'''
     
         plt.show()
         fig.savefig('ths_rapport.png', bbox_inches = 'tight')
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 

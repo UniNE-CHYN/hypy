@@ -10,7 +10,5 @@ from .hypy import *
 from .ths import *
 from .jcb import *
 from .script import *
-from .aga import *
-from .Del import *
 from .thc import *
 from .thn import *

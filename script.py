@@ -28,11 +28,14 @@ def cmp(p,t,s,name):
     #define regular points to plot the calculated drawdown
     tc = np.logspace(np.log10(t[0]), np.log10(t[len(t)-1]),  num = len(t), endpoint = True, base = 10.0, dtype = np.float64)
     
+    
     #compute the drawdown with the model
-    if name == 'ths':
-        sc = hp.ths.dim(p,tc)
-    if name == 'Del' : 
-        sc = hp.Del.dim(p,tc)
+    string = 'hp.'+name+'.dim(p,tc)'
+        
+    sc = eval(string)
+    
+    
+    
     #keep only the positive drawdown
     tc,sc = hp.hyclean(tc,sc)
     

@@ -558,3 +558,22 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
     
         plt.show()
         fig.savefig('thc_rapport.png', bbox_inches = 'tight')    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+   
+    
+    
+    

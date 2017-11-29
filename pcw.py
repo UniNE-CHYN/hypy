@@ -398,9 +398,9 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         ax1.set_ylabel('Drawdown in meters')
         ax1.set_title(ttle)
         
-        ax1.loglog(t, s, c='r',marker = '+', linestyle = '', label = 'drawdown')
-        ax1.loglog(td, sd, c='b',marker = 'x', linestyle = '', label = 'Derivative')
-        ax1.loglog(tc, sc, c='g',   label = 'Theis (1935) Model')
+        ax1.loglog(t, s, c='b',marker = 'o', linestyle = '', label = 'drawdown')
+        ax1.loglog(td, sd, c='r',marker = 'x', linestyle = '', label = 'Derivative')
+        ax1.loglog(tc, sc, c='g',   label = 'Papadopulos-Cooper (1967) Model')
         ax1.loglog(tdc, sdc, c='y',  label = 'Model derivative')
         ax1.grid(True)
 
@@ -434,9 +434,9 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         ax1.set_ylabel('Drawdown in meters')
         ax1.set_title(ttle)
         
-        ax1.loglog(t, s, c='r',marker = '+', linestyle = '', label = 'drawdown')
-        ax1.loglog(td, sd, c='b',marker = 'x', linestyle = '', label = 'Derivative')
-        ax1.loglog(tc, sc, c='g',   label = 'Theis (1935) Model')
+        ax1.loglog(t, s, c='b',marker = 'o', linestyle = '', label = 'drawdown')
+        ax1.loglog(td, sd, c='r',marker = 'x', linestyle = '', label = 'Derivative')
+        ax1.loglog(tc, sc, c='g',   label = 'Papadopulos-Cooper (1967) Model')
         ax1.loglog(tdc, sdc, c='y',  label = 'Model derivative')
         ax1.grid(True)
 

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct  4 14:48:39 2017
-
 @author: pianarol
 """
 import numpy as np
@@ -11,6 +10,7 @@ import math
 import hypy as hp
 from scipy.optimize import leastsq
 from scipy import interpolate as spi
+from math import factorial as fac
 
 
 ### function ldf ###
@@ -18,21 +18,16 @@ from scipy import interpolate as spi
 
 def ldf(file) :
     '''LDF Load a data file and remove points such that t<=0
-
  Syntax: [t,s] = ldf( 'fname.dat' )
-
    fname = filename
    t     = time vector
    s     = drawdown vector
-
  Description: 
    ldf('filename.dat')is a hytool function designed for loading of data.
    It imports the first and the second column of the file “filename.dat” 
    into the variables t and s (p.e. time and drawdown).
-
  Example: 
    [t1,s1]=ldf('ths_ds1.dat')
-
  See also: trial, diagnostic, fit, ths_dmo
 '''
     
@@ -87,9 +82,7 @@ def plot(x,y):
 
 def ldiff(t,s):
     '''LDIFF - Approximate logarithmic derivative with centered differences
-
  Syntax: [xd,yd]=ldiff(x,y)
-
  See also: ldf, ldiffs, ldiffb, ldiffh'''
 
 #Calculate the difference
@@ -137,12 +130,10 @@ def ldiff_plot(t,s):
 
 def ldiffs(t,s, npoints = 20):
     '''#LDIFFS - Approximate logarithmic derivative with Spline
-
  Syntax: [xd,yd] = ldiffs(x,y,[d])
  
    d = optional argument allowing to adjust the number of points 
         used in the Spline
-
  See also: ldf, ldiff, ldiffb, ldiffh'''
 
     f = len(t)
@@ -163,19 +154,20 @@ def ldiffs(t,s, npoints = 20):
 ### function ldiffs_plot
 
 
-def ldiffs_plot(a,b):
+def ldiffs_plot(t,s):
     '''Makes the plot of the ldiffs function'''
-    xd,yd = ldiffs(a,b)    
+    xd,yd = ldiffs(t,s)    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
     
-    ax1.loglog(a, b, c='r', label = 'drawdown')
-    ax1.scatter(xd, yd, c='b', label = 'derivative')
+    ax1.loglog(t, s, c='b', marker = 'o', linestyle = '', label = 'drawdown')
+    ax1.scatter(xd, yd, c='r', marker = 'x', label = 'derivative')
     ax1.grid(True)
 
     ax1.legend()
+    fig.savefig('diagno.png', bbox_inches = 'tight')
     
     plt.show()
 
@@ -185,12 +177,9 @@ def ldiffs_plot(a,b):
 
 def ldiffb(t,s, d = 2):
     '''#LDIFFB - Approximate logarithmic derivative with Bourdet's formula
-
  Syntax: [xd,yd]=ldiffb(x,y[,d])
-
    d = optional argument allowing to adjust the distance between 
        successive points to calculate the derivative.
-
  See also: ldf, ldiff, ldiffs, ldiffh'''
     ###transform the value of the array X into logarithms 
     logx = []
@@ -228,8 +217,8 @@ def ldiffb_plot(t,s):
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
     
-    ax1.loglog(t, s, c='r', label = 'drawdown')
-    ax1.scatter(xd, yd, c='b', label = 'derivative')
+    ax1.loglog(t, s, c='b', marker = 'o', linestyle = '', label = 'drawdown')
+    ax1.scatter(xd, yd, c='r', marker = 'x', linestyle = '', label = 'derivative')
     ax1.grid(True)
 
     ax1.legend()
@@ -243,9 +232,7 @@ def ldiffb_plot(t,s):
 
 def ldiffh(t,s):
     '''#LDIFFH - Approximate logarithmic derivative with Horne formula
-
  Syntax: [xd,yd]=ldiffh(t,s)
-
  See also: ldf, ldiff, ldiffb, ldiffs'''
     #create the table t1,t2,t3 and s1,s2,s3
 
@@ -336,8 +323,8 @@ def ldiffh_plot(t,s):
     ax1.set_xlabel('Time')
     ax1.set_ylabel('Drawdown and log derivative')
     
-    ax1.loglog(t, s, c='r', label = 'drawdown')
-    ax1.scatter(xd, yd, c='b', label = 'derivative')
+    ax1.loglog(t, s, c='b', marker = 'o', linestyle = '', label = 'drawdown')
+    ax1.scatter(xd, yd, c='r', marker = 'x', linestyle = '', label = 'derivative')
     ax1.grid(True)
 
     ax1.legend()
@@ -351,27 +338,20 @@ def ldiffh_plot(t,s):
 def diagnostic(a,b, method = 'spline', npoints = 20, step = 2):
     '''DIAGNOSTIC Creates a diagnostic plot of the data
 Syntax: diagnostic(t,s, mehtod,npoints,step)
-
 npoints = optional argument allowing to adjust the 
 number of points used in the Spline by default
 or the distance between points depending on the option below
-
 method = optional argument allowing to select
 different methods of computation of the derivative
-
 'spline' for spline resampling
 in that case d is the number of points for the spline
-
 'direct' for direct derivation
 in that case the value provided in the variable d is not used
-
 'bourdet' for the Bourdet et al. formula
 in that case d is the lag distance used to compute the derivative
-
 Description:
 This function allows to create rapidly a diagnostic plot
 (i.e. a log-log plot of the drawdown as a function of time together with its logarithmic derivative) of the data. 
-
 Example: 
     diagnostic(t,s) 
     diagnostic(t,s,30) 
@@ -397,16 +377,15 @@ def hyclean(t,s):
     '''HYCLEAN - Take only the values that are finite and strictly positive time
                 
  Syntax: [tc,sc] = hyclean( t,s )
-
  Description:
    Take only the values that are finite and strictly positive time 
           
  Example:
    [tc,sc] = hyclean( t,s )
-
  See also: hyselect, hysampling, hyfilter, hyplot'''
     
     condition = np.logical_and(np.isfinite(s), np.greater(s,0))
+
     s = np.extract(condition,s)
     t = np.extract(condition, t)
     
@@ -415,37 +394,32 @@ def hyclean(t,s):
 ###function trial ###
     
 
-def trial(x,t,s, name):
+def trial(p,t,s, name):
     '''TRIAL Display data and calculated solution together
-
        Syntax:
            trial(x, t, s, name )          
    
           name = name of the solution
           x    = vector of parameters
           t,s  = data set
-
        Description:
            The function trial allows to produce a graph that superposes data
            and a model. This can be used to test graphically the quality of a
            fit, or to adjust manually the parameters of a model until a
            satisfactory fit is obtained.
-
        Example:
            trial(p,t,s,'ths')
            trial([0.1,1e-3],t,s, 'cls')
-
-
        See also: ldf, diagnostic, fit, ths_dmo'''
     t,s = hyclean(t,s)
-    td,sd = ldiffs(t,s, npoints=40)
+    td,sd = ldiffs(t,s, npoints=30)
     
     tplot = np.logspace(np.log10(t[0]), np.log10(t[len(t)-1]),  endpoint = True, base = 10.0, dtype = np.float64)
     
-    if name == 'ths' :
-        sc = hp.ths.dim(x,tplot)
-    if name == 'Del' :
-        sc = hp.Del.dim(x,tplot)
+    
+    string = 'hp.'+name+'.dim(p,tplot)'
+        
+    sc = eval(string)
     
     
     tdc,dsc = ldiff(tplot,sc)
@@ -467,10 +441,10 @@ def trial(x,t,s, name):
     ax1.set_xlabel('t')
     ax1.set_ylabel('s')
     ax1.set_title('Log Log diagnostic plot')
-    ax1.loglog(t, s, c='r', marker = 'o', linestyle = '')
-    ax1.loglog(td,sd, c = 'b', marker = 'x', linestyle = '')
-    ax1.loglog(tplot,sc, c = 'g', linestyle = ':')
-    ax1.loglog(tdc,dsc, c = 'y', linestyle = '-.')
+    ax1.loglog(t, s, c='b', marker = 'o', linestyle = '')
+    ax1.loglog(td,sd, c = 'r', marker = 'x', linestyle = '')
+    ax1.loglog(tplot,sc, c = 'g')
+    ax1.loglog(tdc,dsc, c = 'y')
     
     ax1.grid(True)
 
@@ -482,10 +456,10 @@ def trial(x,t,s, name):
     ax1.set_xlabel('t')
     ax1.set_ylabel('s')
     ax1.set_title('Semi Log diagnostic plot')
-    ax1.semilogx(t, s, c='r', marker = 'o', linestyle = '')
-    ax1.semilogx(td,sd, c = 'b', marker = 'x', linestyle = '')
-    ax1.semilogx(tplot,sc, c = 'g', linestyle = ':')
-    ax1.semilogx(tdc,dsc, c = 'y', linestyle = '-.')
+    ax1.semilogx(t, s, c='b', marker = 'o', linestyle = '')
+    ax1.semilogx(td,sd, c = 'r', marker = 'x', linestyle = '')
+    ax1.semilogx(tplot,sc, c = 'g')
+    ax1.semilogx(tdc,dsc, c = 'y')
     
     ax1.grid(True)
     
@@ -519,11 +493,14 @@ def fit(p0,t,s,name):
 # See also: ldf, diagnostic, trial'''
     
     def residual(p0,t,s,name):
-        if name == 'ths':
-            sc = hp.ths.dim(p0,t)
-        if name == 'Del' :
-            sc = hp.Del.dim(p0,t)
-            
+#        if name == 'ths':
+#            sc = hp.ths.dim(p0,t)
+#        if name == 'Del' :
+#            sc = hp.Del.dim(p0,t)
+        
+        string = 'hp.'+name+'.dim(p0,t)'
+        
+        sc = eval(string) 
         scs = []
         
         for i in range(0, len(s)):
@@ -539,12 +516,50 @@ def fit(p0,t,s,name):
     p = fit2(residual, p0,t,s)
     
     return p
+
+
+
+
+###function stehfest and the coefficient ###
+def stehfest_coeff(i,N=12):
+
+    Vi=0
+
     
+    for k in range( int((i+1.)/2), min(i,N//2)+1 ) :
+
+        
+        Vi=Vi+math.pow(k,N/2)*fac(2*k)/fac(N/2-k)/fac(k)/fac(k-1)/fac(i-k)/fac(2*k-i)
+
+   
+
+    Vi *= math.pow(-1,N/2+i)
+
+    return Vi
+
+ 
+
+
+
     
-    
-    
-    
-    
-    
-    
-    
+
+def stefhest(name, p, t, N=12):
+
+   resultat = 0
+   string = 'hp.'+name+'(p,i*math.log(2)/t)'
+ 
+   for i in range(1,N+1):
+       resultat = resultat+stehfest_coeff(i,N)*eval(string)
+       
+   resultat = math.log(2)/t*resultat
+      
+   return resultat
+
+
+
+
+
+
+
+
+

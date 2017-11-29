@@ -8,7 +8,7 @@ Created on Mon Oct  9 13:59:33 2017
 
 import numpy as np
 import math
-import hypy as hp
+
 
 ###function gss ###
 
@@ -34,7 +34,7 @@ def gss(t,s):
     tmax = t[len(t)-1]
     
     
-    
+
     
     logt = []
     for i in range(0, len(t)):

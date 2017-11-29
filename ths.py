@@ -342,26 +342,3 @@ See also: ths_dmo, ths_dim, ths_gss'''
 
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

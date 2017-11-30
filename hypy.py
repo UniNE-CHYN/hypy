@@ -11,12 +11,13 @@ import hypy as hp
 from scipy.optimize import leastsq
 from scipy import interpolate as spi
 from math import factorial as fac
+import xlrd
 
 
-### function ldf ###
+### function ldf with text files ###
 
 
-def ldf(file) :
+def ldftxt(file):
     '''LDF Load a data file and remove points such that t<=0
  Syntax: [t,s] = ldf( 'fname.dat' )
    fname = filename
@@ -44,6 +45,49 @@ def ldf(file) :
     
     
     s = np.loadtxt(file, usecols = 1)
+    
+    #make sure the array contains only float
+    s = np.array(s)
+    s = np.asfarray(s, float)
+
+#take only the positive values
+    s = np.extract(condition,s)
+    
+    return t,s
+
+###function ldf with xls files : 
+    
+def ldfxls(file): 
+    '''LDF Load a data file and remove points such that t<=0
+ Syntax: [t,s] = ldf( 'fname.dat' )
+   fname = filename
+   t     = time vector
+   s     = drawdown vector
+ Description: 
+   ldf('filename.dat')is a hytool function designed for loading of data.
+   It imports the first and the second column of the file “filename.dat” 
+   into the variables t and s (p.e. time and drawdown).
+ Example: 
+   [t1,s1]=ldf('ths_ds1.dat')
+ See also: trial, diagnostic, fit, ths_dmo
+'''
+
+    b = xlrd.open_workbook(file)
+    a = b.sheet_by_index(0)
+    
+    t = a.col_values(0)
+
+        #make sure the array contains only float
+    t = np.array(t)
+    t = np.asfarray(t, float)
+
+#take only the positive values
+    condition = np.greater(t,0)
+    
+    t = np.extract(condition,t)
+    
+    
+    s = a.col_values(1)
     
     #make sure the array contains only float
     s = np.array(s)

@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 def dim(p,t):
     '''THS_DIM - Compute drawdown with the Theis (1935) solution
 
- Syntax: s = ths_dim( p, t) 
+ Syntax: s = hp.ths.dim( p, t) 
 
    p(1) = a  = slope of Jacob Straight Line in meters
    p(2) = t0 = intercept with the horizontal axis for s = 0
@@ -75,7 +75,7 @@ def dim(p,t):
 def dls(td):
     '''THS_DLS - Dimensionless drawdown of the Theis model
 
- Syntax: [sd,dd] = ths_dls(td)
+ Syntax: sd,dd = hp.ths.dls(td)
 
  Description:
    Calculates the dimensionless drawdown sd and the dimensionless 
@@ -95,47 +95,49 @@ def dls(td):
 
 ####function drw ###
 
+##Not sure if useful and coded right
 
-def drw():
-    '''THS_DRW - Type curves of the Theis model.
 
- Syntax: ths_drw()
-
- Description:
-   Draw a series of type curves of Theis (1935)
-
- See also: ths_dim, ths_dls
-'''
-
-    td = np.logspace(-1, 4)
-    sd, dd = dls(td)
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-       
-    ax1.set_xlabel(r'$t_{D}/r²_{D} = T t / S r²$')
-    ax1.set_ylabel(r'$s_{D} = 2*\pi*s/Q$')    
-                                                 
-    ax1.loglog(td,sd, c='b', label='Theis') 
-    ax1.plot(td,dd, c='r', linestyle = '--', label='Derivative')        
-    ax1.legend()                          
-            
-    plt.show()                              
-
-    fig2 = plt.figure()
-    sj = hp.jcb.dls(td)        
-    ax2 = fig2.add_subplot(111)
-
-        
-    ax2.set_xlabel(r'$t_{D}/r²_{D}$')    
-    ax2.set_ylabel(r'$s_{D}$')     
-    
-    ax2.semilogx(td,sd, c='b', linestyle = '--', label='Theis') 
-    ax2.plot(td,sj, c='r', label='Jacob')        
-    ax2.legend()                           
-            
-    plt.show()                              
+#def drw():
+#    '''THS_DRW - Type curves of the Theis model.
+#
+# Syntax: hp.ths.drw()
+#
+# Description:
+#   Draw a series of type curves of Theis (1935)
+#
+# See also: ths_dim, ths_dls
+#'''
+#
+#    td = np.logspace(-1, 4)
+#    sd, dd = dls(td)
+#    fig = plt.figure()
+#            
+#    ax1 = fig.add_subplot(111)
+#
+#       
+#    ax1.set_xlabel(r'$t_{D}/r²_{D} = T t / S r²$')
+#    ax1.set_ylabel(r'$s_{D} = 2*\pi*s/Q$')    
+#                                                 
+#    ax1.loglog(td,sd, c='b', label='Theis') 
+#    ax1.plot(td,dd, c='r', linestyle = '--', label='Derivative')        
+#    ax1.legend()                          
+#            
+#    plt.show()                              
+#
+#    fig2 = plt.figure()
+#    sj = hp.jcb.dls(td)        
+#    ax2 = fig2.add_subplot(111)
+#
+#        
+#    ax2.set_xlabel(r'$t_{D}/r²_{D}$')    
+#    ax2.set_ylabel(r'$s_{D}$')     
+#    
+#    ax2.semilogx(td,sd, c='b', linestyle = '--', label='Theis') 
+#    ax2.plot(td,sj, c='r', label='Jacob')        
+#    ax2.legend()                           
+#            
+#    plt.show()                              
 
 ### function gss ###
 
@@ -144,7 +146,7 @@ def drw():
 def gss(t,s):
     '''THS_GSS - First guess for the parameters of the Theis model.
 
- Syntax:  p = ths_gss(t,s)
+ Syntax:  p = hp.ths.gss(t,s)
 
    p(1) = a  = slope of Jacob straight line for late time
    p(2) = t0 = intercept with the horizontal axis for s = 0
@@ -178,7 +180,7 @@ def gss(t,s):
 def jac(p,t):
     '''THS_JAC - Jacobian matrix of the Theis function
 
- Syntax: j = ths_jac( p, t)
+ Syntax: j = hp.ths.jac( p, t)
 
     j(1,:) = ds / dp(1) 
     j(2,:) = ds / dp(2)
@@ -205,7 +207,8 @@ def jac(p,t):
 
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     '''THS_RPT - Reports graphically the results of a pumping test interpreted with the Theis (1935) model. 
- Syntax: ths_rpt( p, t, s, d, name, ttle, Author, Rapport, filetype )
+    
+ Syntax: hp.ths.rpt( p, t, s, d, name, ttle, Author, Rapport, filetype )
  p = parameters of the model 
  p(1) = a = slope of the straight line
  p(2) = t0 = intercept with the horizontal axis for s = 0                                                                                        
@@ -320,25 +323,3 @@ See also: ths_dmo, ths_dim, ths_gss'''
         plt.show()
         fig.savefig('ths_rapport.png', bbox_inches = 'tight')
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

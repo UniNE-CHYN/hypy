@@ -19,7 +19,7 @@ import xlrd
 
 def ldftxt(file):
     '''LDF Load a data file and remove points such that t<=0
- Syntax: [t,s] = ldf( 'fname.dat' )
+ Syntax: t,s = hp.ldf( 'fname.txt' )
    fname = filename
    t     = time vector
    s     = drawdown vector
@@ -59,7 +59,7 @@ def ldftxt(file):
     
 def ldfxls(file): 
     '''LDF Load a data file and remove points such that t<=0
- Syntax: [t,s] = ldf( 'fname.dat' )
+ Syntax: t,s = hp.ldfxls( 'fname.xlsx' )
    fname = filename
    t     = time vector
    s     = drawdown vector
@@ -98,26 +98,6 @@ def ldfxls(file):
     
     return t,s
 
-### function plot ###
-
-def plot(x,y):
-    '''create a simple plot with t and s as entry'''
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-    ax1.set_xlabel('Time in seconds')       #define the xlabel
-    ax1.set_ylabel('Drawdown in meters')    #define the ylabel
-                                                 
-    ax1.plot(x,y, c='r', label='the data') #create the plot
-            
-    ax1.legend()                            #add the legend
-            
-    plt.show()                              #show the plot
-
-
-
-
 
 ##############Differential functions ##########################
 
@@ -126,7 +106,7 @@ def plot(x,y):
 
 def ldiff(t,s):
     '''LDIFF - Approximate logarithmic derivative with centered differences
- Syntax: [xd,yd]=ldiff(x,y)
+ Syntax: xd,yd = hp.ldiff(x,y)
  See also: ldf, ldiffs, ldiffb, ldiffh'''
 
 #Calculate the difference
@@ -174,7 +154,7 @@ def ldiff_plot(t,s):
 
 def ldiffs(t,s, npoints = 20):
     '''#LDIFFS - Approximate logarithmic derivative with Spline
- Syntax: [xd,yd] = ldiffs(x,y,[d])
+ Syntax: xd,yd = hp.ldiffs(x,y,[d])
  
    d = optional argument allowing to adjust the number of points 
         used in the Spline
@@ -221,7 +201,7 @@ def ldiffs_plot(t,s):
 
 def ldiffb(t,s, d = 2):
     '''#LDIFFB - Approximate logarithmic derivative with Bourdet's formula
- Syntax: [xd,yd]=ldiffb(x,y[,d])
+ Syntax: xd,yd = hp.ldiffb(x,y[,d])
    d = optional argument allowing to adjust the distance between 
        successive points to calculate the derivative.
  See also: ldf, ldiff, ldiffs, ldiffh'''
@@ -276,7 +256,7 @@ def ldiffb_plot(t,s):
 
 def ldiffh(t,s):
     '''#LDIFFH - Approximate logarithmic derivative with Horne formula
- Syntax: [xd,yd]=ldiffh(t,s)
+ Syntax: xd,yd = hp.ldiffh(t,s)
  See also: ldf, ldiff, ldiffb, ldiffs'''
     #create the table t1,t2,t3 and s1,s2,s3
 
@@ -420,7 +400,7 @@ See also: trial, ldf, ldiff, ldiffs, fit '''
 def hyclean(t,s):
     '''HYCLEAN - Take only the values that are finite and strictly positive time
                 
- Syntax: [tc,sc] = hyclean( t,s )
+ Syntax: tc,sc = hp.hyclean( t,s )
  Description:
    Take only the values that are finite and strictly positive time 
           
@@ -441,7 +421,7 @@ def hyclean(t,s):
 def trial(p,t,s, name):
     '''TRIAL Display data and calculated solution together
        Syntax:
-           trial(x, t, s, name )          
+           hp.trial(x, t, s, 'name')          
    
           name = name of the solution
           x    = vector of parameters
@@ -516,7 +496,7 @@ def trial(p,t,s, name):
 def fit(p0,t,s,name):
     '''FIT - Fit the model parameter of a given model.
 #
-# Syntax: p = fit(p0, t, s, name)          
+# Syntax: p = hp.fit(p0, t, s, 'name')          
 #   
 #      name   = name of the solution
 #      p0     = vector of initial guess for the parameters
@@ -598,12 +578,3 @@ def stefhest(name, p, t, N=12):
    resultat = math.log(2)/t*resultat
       
    return resultat
-
-
-
-
-
-
-
-
-

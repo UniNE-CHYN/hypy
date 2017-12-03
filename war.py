@@ -18,7 +18,7 @@ def lap(x,p):
     '''WAR_LAP - Warren and Root (1963) solution in  Laplace domain
 
  Syntax:
-   war_lap(x,p) provides the dimensionless drawdown at the well
+   hp.war.lap(x,p) provides the dimensionless drawdown at the well
 
    x(1) = sigma
    x(2) = lamda
@@ -39,7 +39,7 @@ def lap(x,p):
 def dls(x,td):
     '''WAR_DLS - Dimensionless drawdown of Warren and Root (1963) solution
 
- Syntax: war_dls(x,t)
+ Syntax: hp.war.dls(x,t)
    x(1) = sigma 
    x(2) = lamda
    t = time
@@ -67,7 +67,7 @@ def dls(x,td):
 def dim(p,t):
     '''WAR_DIM - Warren and Root (1965) solution
 
- Syntax: s = war_dim( p, t)
+ Syntax: s = hp.war.dim( p, t)
 
    p(1) = a  = slope of Jacob Straight Line
    p(2) = t0 = intercept with the horizontal axis for 
@@ -112,7 +112,7 @@ def dim(p,t):
 def gss(t,s):
     '''WAR_GSS - First guess for the parameters of the Warren and Root solution
 
- Syntax: p = war_gss(t,s)
+ Syntax: p = hp.war.gss(t,s)
 
    p(1) = a  = slope of Jacob Straight Line
    p(2) = t0 = intercept with the horizontal axis for 
@@ -164,7 +164,7 @@ def gss(t,s):
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     '''WAR_RPT - Produces the final figure and results for the Warren and Root model
     
-    Syntax: war_rpt( p, t, s, d, ttle ) 
+    Syntax: hp.war.rpt( p, t, s, d, ttle ) 
     p(1) = a = slope of Jacob Straight Line 
     p(2) = t0 = intercept with the horizontal axis for the early time asymptote 
     p(3) = t1 = intercept with the horizontal axis for the late time asymptote 
@@ -292,17 +292,3 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         plt.show()
         fig.savefig('war_rapport.png', bbox_inches = 'tight')    
          
-
-
-
-
-
-
-
-
-
-
-
-
-
-

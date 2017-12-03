@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 def dim(p,t):
     '''THN_DIM - Theis model with a no-flow boundary
 
- Syntax: s = thn_dim(p,t)
+ Syntax: s = hp.thn.dim(p,t)
    p(1) = a  = slope of Jacob Straight Line
    p(2) = t0 = intercept of the first segment of straight line
    p(3) = ti = time of intersection between the 2 straight lines
@@ -27,7 +27,7 @@ def dim(p,t):
    boundary
 
  Example:
-   s = thn_dim( p,t )
+   s = hp.thn.dim( p,t )
 
  See also: thn_dmo, thn_dim, thn_gss'''
 
@@ -43,7 +43,7 @@ def dim(p,t):
 def dls(p,t):
     '''THN_DLS - Dimensionless drawdown of the Theis model with a no-flow boundary
 
- Syntax: s = thn_dls(p,t)
+ Syntax: s = hp.thn.dls(p,t)
 
    p(1) = r1/r2  
    with r1 = radius to the pumping well 
@@ -60,93 +60,95 @@ def dls(p,t):
 
 ###function drw ###
 
-def drw():
-    '''THN_DRW - Type curves of the Theis model with a no-flow boundary
+##Not sure if useful and coded right
 
- Syntax: thn_drw()
-
- Description:
-   Draw a series of type curves of Theis (1935) model with a no-flow 
-   boundary
-
- See also: thn_dim, thn_dls'''
- 
-#First figure    
-    
-    td = np.logspace(-1, 4)
-    
-    R1 = [1.3,3.3,10,30]
-    R2 = [3.3,1.3]
-    R3 = [10,0]
-    R4 = [30,0]
-    
-    s1 = hp.thn.dls(R1,td)
-    s2 = hp.thn.dls(R2,td)
-    s3 = hp.thn.dls(R3,td)
-    s4 = hp.thn.dls(R4,td)
-    xd1,yd1 = hp.ldiff(td,s1)
-    xd2,yd2 = hp.ldiff(td,s2)
-    xd3,yd3 = hp.ldiff(td,s3)
-    xd4,yd4 = hp.ldiff(td,s4)    
-    
-    tds,tdss = hp.ths.dls(td)
-    
-    
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-    
-    ax1.set_xlabel(r'$t_{D}/r²_{D}$')    
-    ax1.set_ylabel(r'$s_{D}$') 
-    
-    ax1.loglog(td,s1, c='b')
-    ax1.loglog(xd1,yd1, c='b', linestyle = '--')
-    ax1.loglog(td,s2, c='r')
-    ax1.loglog(xd2,yd2, c='r', linestyle = '-.')
-    ax1.loglog(td,s3, c='g')
-    ax1.loglog(xd3,yd3, c='g', linestyle = ':')
-    ax1.loglog(td,s4, c='y')
-    ax1.loglog(xd4,yd4, c='y', linestyle = '--')
-    
-    ax1.loglog(td,tds, c = 'black')
-    
-#    ax1.legend()                          
-    ax1.set_ylim(ymin=1e-2)
-    ax1.set_xlim(xmin=1e-1)
-        
-    plt.show()
-    
-    
-#Second figure
-
-    Rd = [33]
-
-    s = hp.thn.dls(Rd,td)
-
-    xd,yd = hp.ldiff(td,s)
-    tdj = hp.jcb.dls(td)
-    
-    tdrd = []
-    
-    for i in range(0,len(tdj)):
-        tdrd.append(2*tdj[i])
-    
-    fig2 = plt.figure()
-            
-    ax2 = fig2.add_subplot(111)
-
-    ax2.semilogx(td,s,marker = 'd', linestyle = '', c = 'b')
-    ax2.semilogx(xd,yd, marker = 'd', linestyle ='', c = 'r')
-    ax2.semilogx(td,tdj, c='g', linestyle = '--')
-    ax2.semilogx(td,tdrd,c = 'black', linestyle = '--')
-    
-    ax2.set_xlabel('t')
-    ax2.set_ylabel('s')
-    
-    ax2.set_ylim(ymin = 0)
-
-    plt.show()             
+#def drw():
+#    '''THN_DRW - Type curves of the Theis model with a no-flow boundary
+#
+# Syntax: hp.thn.drw()
+#
+# Description:
+#   Draw a series of type curves of Theis (1935) model with a no-flow 
+#   boundary
+#
+# See also: thn_dim, thn_dls'''
+# 
+##First figure    
+#    
+#    td = np.logspace(-1, 4)
+#    
+#    R1 = [1.3,3.3,10,30]
+#    R2 = [3.3,1.3]
+#    R3 = [10,0]
+#    R4 = [30,0]
+#    
+#    s1 = hp.thn.dls(R1,td)
+#    s2 = hp.thn.dls(R2,td)
+#    s3 = hp.thn.dls(R3,td)
+#    s4 = hp.thn.dls(R4,td)
+#    xd1,yd1 = hp.ldiff(td,s1)
+#    xd2,yd2 = hp.ldiff(td,s2)
+#    xd3,yd3 = hp.ldiff(td,s3)
+#    xd4,yd4 = hp.ldiff(td,s4)    
+#    
+#    tds,tdss = hp.ths.dls(td)
+#    
+#    
+#    fig = plt.figure()
+#            
+#    ax1 = fig.add_subplot(111)
+#
+#    
+#    ax1.set_xlabel(r'$t_{D}/r²_{D}$')    
+#    ax1.set_ylabel(r'$s_{D}$') 
+#    
+#    ax1.loglog(td,s1, c='b')
+#    ax1.loglog(xd1,yd1, c='b', linestyle = '--')
+#    ax1.loglog(td,s2, c='r')
+#    ax1.loglog(xd2,yd2, c='r', linestyle = '-.')
+#    ax1.loglog(td,s3, c='g')
+#    ax1.loglog(xd3,yd3, c='g', linestyle = ':')
+#    ax1.loglog(td,s4, c='y')
+#    ax1.loglog(xd4,yd4, c='y', linestyle = '--')
+#    
+#    ax1.loglog(td,tds, c = 'black')
+#    
+##    ax1.legend()                          
+#    ax1.set_ylim(ymin=1e-2)
+#    ax1.set_xlim(xmin=1e-1)
+#        
+#    plt.show()
+#    
+#    
+##Second figure
+#
+#    Rd = [33]
+#
+#    s = hp.thn.dls(Rd,td)
+#
+#    xd,yd = hp.ldiff(td,s)
+#    tdj = hp.jcb.dls(td)
+#    
+#    tdrd = []
+#    
+#    for i in range(0,len(tdj)):
+#        tdrd.append(2*tdj[i])
+#    
+#    fig2 = plt.figure()
+#            
+#    ax2 = fig2.add_subplot(111)
+#
+#    ax2.semilogx(td,s,marker = 'd', linestyle = '', c = 'b')
+#    ax2.semilogx(xd,yd, marker = 'd', linestyle ='', c = 'r')
+#    ax2.semilogx(td,tdj, c='g', linestyle = '--')
+#    ax2.semilogx(td,tdrd,c = 'black', linestyle = '--')
+#    
+#    ax2.set_xlabel('t')
+#    ax2.set_ylabel('s')
+#    
+#    ax2.set_ylim(ymin = 0)
+#
+#    plt.show()             
 
 
 ###function gss ###
@@ -154,7 +156,7 @@ def drw():
 def gss(t,s):
     '''THN_GSS - First guess for the parameters of the Theis model with a no-flow boundary
 
- Syntax: p = thn_gss(t,s)
+ Syntax: p = hp.thn.gss(t,s)
 
    p(1) = a  = slope of Jacob straight line 
    p(2) = t0 = intercept of the Jacob straight line 
@@ -203,7 +205,7 @@ def gss(t,s):
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     '''THN_RPT - Produces the final figure and results for the Theis model with a no flow boundary
     
-    Syntax: thn_rpt( p, t, s, d, ttle )
+    Syntax: hp.thn.rpt( p, t, s, d, ttle )
     
     p = parameters of the model 
     t = measured time 
@@ -323,20 +325,3 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
         fig.savefig('thn_rapport.png', bbox_inches = 'tight')    
     
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,24 +12,25 @@ import math
 
 ###function gss ###
 
-#JCB_GSS  - Linear Least Square fitting of Jacob solution
-#
-# Syntax: p = jcb_gss(t,s,tmin,tmax)
-#
-#   p(1) = a  = slope of Jacob straight line
-#   p(2) = t0 = intercept of the Jacob straight line
-#
-#   t    = time 
-#   s    = drawdown
-#   tmin = optional argument: start of the fitting period
-#   tmax = optional argument: end   of the fitting period
-#
-# Description:
-#   First guess for the parameters of Jacob solution
-#
-# See also: jcb_dim, jcb_dmo, jcb_rpt
 
 def gss(t,s):
+    '''JCB_GSS  - Linear Least Square fitting of Jacob solution
+
+ Syntax: p = hp.jcb.gss(t,s,tmin,tmax)
+
+   p(1) = a  = slope of Jacob straight line
+   p(2) = t0 = intercept of the Jacob straight line
+
+   t    = time 
+   s    = drawdown
+   tmin = optional argument: start of the fitting period
+   tmax = optional argument: end   of the fitting period
+
+ Description:
+   First guess for the parameters of Jacob solution
+
+ See also: jcb_dim, jcb_dmo, jcb_rpt'''
+
     tmin = t[0]
     tmax = t[len(t)-1]
     
@@ -54,20 +55,22 @@ def gss(t,s):
     c = p[1]
     t0 = math.pow(10, -c/a)
     p[1] = t0
-    return a, t0
+    
+    return a
     
 ###function dls ###
-#JCB_DLS - Jacob dimensionless drawdown
-#
-# Syntax: [s,d] = jcb_dls(td)
-#
-# Description:
-#   provides the dimensionless drawdown and derivative at reduced time td
-#
-# See also: jcb_dmo
 
 
 def dls(td):
+    '''JCB_DLS - Jacob dimensionless drawdown
+
+ Syntax: s,d = hp.jcb.dls(td)
+
+ Description:
+   provides the dimensionless drawdown and derivative at reduced time td
+
+ See also: jcb_dmo
+'''
     s = []
     
     for i in range(0, len(td)):

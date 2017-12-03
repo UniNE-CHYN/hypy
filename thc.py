@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 def dim(p,t):
     '''THC_DIM - Theis (1941) model with a constant head boundary.
 
- Syntax: s = thc_dim(p,t)
+ Syntax: s = hp.thc.dim(p,t)
 
    p(1) = a  = slope of Jacob Straight Line
    p(2) = t0 = intercept of the first segment of straight line
@@ -50,7 +50,7 @@ def dim(p,t):
 def dls(p,t):
     '''THC_DLS - Theis dimensionless drawdown with a constant head boundary
 
- Syntax: s = thc_dls(p,t)
+ Syntax: s = hp.thc.dls(p,t)
 
    p(1) = r1/r2  
    with r1 = radius to the pumping well 
@@ -69,94 +69,95 @@ def dls(p,t):
 
 ###function drw ###
 
+###Not sure if useful and coded right
 
-def drw():
-    '''THC_DRW - Type curves of the Theis model with a constant head boundary
-
- Syntax: thc_drw()
-
- Description:
-   Draw a series of type curves of Theis (1935)
-
- See also: thc_dim, thc_dls
-    '''
-    
-#First figure    
-    
-    td = np.logspace(-1, 4)
-    
-    R1 = [1.5,3,10,30]
-    R2 = [3,1.5]
-    R3 = [10,0]
-    R4 = [30,0]
-    
-    s1 = hp.thc.dls(R1,td)
-    s2 = hp.thc.dls(R2,td)
-    s3 = hp.thc.dls(R3,td)
-    s4 = hp.thc.dls(R4,td)
-    xd1,yd1 = hp.ldiff(td,s1)
-    xd2,yd2 = hp.ldiff(td,s2)
-    xd3,yd3 = hp.ldiff(td,s3)
-    xd4,yd4 = hp.ldiff(td,s4)    
-    
-    tds,tdss = hp.ths.dls(td)
-    
-    
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-    
-    ax1.set_xlabel(r'$t_{D}/r²_{D}$')    
-    ax1.set_ylabel(r'$s_{D}$') 
-    
-    ax1.loglog(td,s1, c='b')
-    ax1.loglog(xd1,yd1, c='b', linestyle = '--')
-    ax1.loglog(td,s2, c='r')
-    ax1.loglog(xd2,yd2, c='r', linestyle = '-.')
-    ax1.loglog(td,s3, c='g')
-    ax1.loglog(xd3,yd3, c='g', linestyle = ':')
-    ax1.loglog(td,s4, c='y')
-    ax1.loglog(xd4,yd4, c='y', linestyle = '--')
-    
-    ax1.loglog(td,tds, c = 'black')
-    
-#    ax1.legend()                          
-    ax1.set_ylim(ymin=1e-2)
-    ax1.set_xlim(xmin=1e-1)
-        
-    plt.show()
-    
-    
-#Second figure
-
-    Rd = [33]
-
-    s = hp.thc.dls(Rd,td)
-
-    xd,yd = hp.ldiff(td,s)
-    tdj = hp.jcb.dls(td)
-    
-    tdrd = []
-    
-    for i in range(0,len(td)):
-        tdrd.append(math.log(Rd[0]))
-    
-    fig2 = plt.figure()
-            
-    ax2 = fig2.add_subplot(111)
-
-    ax2.semilogx(td,s,marker = 'd', linestyle = '', c = 'b')
-    ax2.semilogx(xd,yd, marker = 'd', linestyle ='', c = 'r')
-    ax2.semilogx(td,tdj, c='g', linestyle = '--')
-    ax2.semilogx(td,tdrd,c = 'black', linestyle = '--')
-    
-    ax2.set_xlabel('t')
-    ax2.set_ylabel('s')
-    
-    ax2.set_ylim(ymin = 0)
-
-    plt.show()        
+#def drw():
+#    '''THC_DRW - Type curves of the Theis model with a constant head boundary
+#
+# Syntax: hp.thc.drw()
+#
+# Description:
+#   Draw a series of type curves of Theis (1935)
+#
+# See also: thc_dim, thc_dls
+#    '''
+#    
+##First figure    
+#    
+#    td = np.logspace(-1, 4)
+#    
+#    R1 = [1.5,3,10,30]
+#    R2 = [3,1.5]
+#    R3 = [10,0]
+#    R4 = [30,0]
+#    
+#    s1 = hp.thc.dls(R1,td)
+#    s2 = hp.thc.dls(R2,td)
+#    s3 = hp.thc.dls(R3,td)
+#    s4 = hp.thc.dls(R4,td)
+#    xd1,yd1 = hp.ldiff(td,s1)
+#    xd2,yd2 = hp.ldiff(td,s2)
+#    xd3,yd3 = hp.ldiff(td,s3)
+#    xd4,yd4 = hp.ldiff(td,s4)    
+#    
+#    tds,tdss = hp.ths.dls(td)
+#    
+#    
+#    fig = plt.figure()
+#            
+#    ax1 = fig.add_subplot(111)
+#
+#    
+#    ax1.set_xlabel(r'$t_{D}/r²_{D}$')    
+#    ax1.set_ylabel(r'$s_{D}$') 
+#    
+#    ax1.loglog(td,s1, c='b')
+#    ax1.loglog(xd1,yd1, c='b', linestyle = '--')
+#    ax1.loglog(td,s2, c='r')
+#    ax1.loglog(xd2,yd2, c='r', linestyle = '-.')
+#    ax1.loglog(td,s3, c='g')
+#    ax1.loglog(xd3,yd3, c='g', linestyle = ':')
+#    ax1.loglog(td,s4, c='y')
+#    ax1.loglog(xd4,yd4, c='y', linestyle = '--')
+#    
+#    ax1.loglog(td,tds, c = 'black')
+#    
+##    ax1.legend()                          
+#    ax1.set_ylim(ymin=1e-2)
+#    ax1.set_xlim(xmin=1e-1)
+#        
+#    plt.show()
+#    
+#    
+##Second figure
+#
+#    Rd = [33]
+#
+#    s = hp.thc.dls(Rd,td)
+#
+#    xd,yd = hp.ldiff(td,s)
+#    tdj = hp.jcb.dls(td)
+#    
+#    tdrd = []
+#    
+#    for i in range(0,len(td)):
+#        tdrd.append(math.log(Rd[0]))
+#    
+#    fig2 = plt.figure()
+#            
+#    ax2 = fig2.add_subplot(111)
+#
+#    ax2.semilogx(td,s,marker = 'd', linestyle = '', c = 'b')
+#    ax2.semilogx(xd,yd, marker = 'd', linestyle ='', c = 'r')
+#    ax2.semilogx(td,tdj, c='g', linestyle = '--')
+#    ax2.semilogx(td,tdrd,c = 'black', linestyle = '--')
+#    
+#    ax2.set_xlabel('t')
+#    ax2.set_ylabel('s')
+#    
+#    ax2.set_ylim(ymin = 0)
+#
+#    plt.show()        
     
     
 ###function frd ###
@@ -166,7 +167,7 @@ def drw():
 def frd(rd):
     '''THC_FRD - Function f(rd)
 
- Syntax: frd = thc_frd(rd)
+ Syntax: frd = hp.thc.frd(rd)
 
    rd  = Dimensionless radius
    frd = 2 ln(rd) / ( rd^2 -1 ) rd^(2 rd^2/(1-rd^2))'''
@@ -216,7 +217,7 @@ def frd(rd):
 def gss(t,s):
     '''THC_GSS - First guess for the parameters of the Theis model with a constant head boundary.
 
- Syntax:  p = thc_gss(t,s)
+ Syntax:  p = hp.thc.gss(t,s)
 
    p(1) = a  = slope of Jacob straight line 
    p(2) = t0 = iintercept of the first segment of straight line 
@@ -304,7 +305,7 @@ def gss(t,s):
 def ird(frd1):
     '''THC_IRD - Function inverse of f(rd)
 
-Syntax: rd = thc_ird(frd)
+Syntax: rd = hp.thc.ird(frd)
 
 rd  = Dimensionless radius
 frd = 2 ln(rd) / ( rd^2 -1 ) rd^(2 rd^2/(1-rd^2))'''    
@@ -362,7 +363,7 @@ frd = 2 ln(rd) / ( rd^2 -1 ) rd^(2 rd^2/(1-rd^2))'''
 def p2x(p):
     '''%THC_P2X - Conversion of parameters for constant head case
 
- Syntax: x = thc_p2x(p)
+ Syntax: x = hp.thc.p2x(p)
 
   p(1) = sl  = late time drawdown at the plateau
   p(2) = du  = maximum derivative 
@@ -403,7 +404,7 @@ def p2x(p):
 def std(l,T,r0):
     '''THC_STD - Computes discharge rate for a well close to a constant head boundary
 
- Syntax: q = thc_std( l, T, r0 )
+ Syntax: q = hp.thc.std( l, T, r0 )
 
    l  = Distance to the hydraulic boundary
    T  = Transmissivity
@@ -437,7 +438,7 @@ See also: lei_std, thn_std, thc_dim, thc_dmo'''
 
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     '''%THC_RPT - Report the results of an interpretation with Theis (1941) 
-     Syntax: thc_rpt( p, t, s, d, ttle ) 
+     Syntax: hp.thc.rpt( p, t, s, d, ttle ) 
       p = parameters of the model 
       t = measured time 
       s = measured drawdown 
@@ -558,22 +559,4 @@ def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport 
     
         plt.show()
         fig.savefig('thc_rapport.png', bbox_inches = 'tight')    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-   
-    
-    
-    
+ 

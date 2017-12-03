@@ -56,7 +56,7 @@ def gss(t,s):
     t0 = math.pow(10, -c/a)
     p[1] = t0
     
-    return a
+    return a,t0
     
 ###function dls ###
 

@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 def der(x,p):
     '''PCW_DER - Papadopulos-Cooper solution the well : Log derivative of the solution in Laplace domain
                 
- Syntax: s = pcw_der( x, p)
+ Syntax: s = hp.pcw.der( x, p)
    x[1] = Cd
    p = Laplace parameter 
 
@@ -40,7 +40,7 @@ def der(x,p):
 def lap(x,p):
     '''PCW_LAP - Papadopulos Cooper Laplace domain solution in the well
 
- Syntax: s = pcw_lap( x, p)
+ Syntax: s = hp.pcw.lap( x, p)
 
    x[1] = Cd
    p = Laplace parameter 
@@ -68,7 +68,7 @@ def lap(x,p):
 def dls(x,t):
     '''PCW_DLS - Papadopulos Cooper dimensionless solution in the well
 
- Syntax: [s,ds] = pcw_dls( x, t)
+ Syntax: s,ds = hp.pcw.dls( x, t)
 
    x(1) = Cd
    t = time 
@@ -97,7 +97,7 @@ def dls(x,t):
 def dim(p,t):
     '''PCW_DIM - Papadopulos Cooper (1967) solution 
 
- Syntax: [s,d] = pcw_dim( p, t)
+ Syntax: s,d = hp.pcw.dim( p, t)
 
    p(1) = a  = slope of late time straight line
    p(2) = t0 = intercept of late time straight line
@@ -163,107 +163,109 @@ def dim(p,t):
 
 
 ###function drw ###
-    
-def drw():
-    '''PCW_DRW - Draw the type curves of Papadopulos-Cooper (1967)
 
- Syntax: pcw_drw()
-
- Description:
-   Draw a series of type curves of Papadopulos-Cooper (1967)
-
-    Reference: Papadopulos, I.S., and H.H.J. Cooper. 1967. Drawdown in a
-    well of large diameter. Water Resources Research 3, no. 1: 241-244. 
-
- See also: pcw_dim, pcw_dls
-'''
-
-#First figure    
+###Not sure if useful and coded right
     
-    t = np.logspace(-2, 8)
-    
-    s1,ds1 = dls([10^1],t)
-    s2,ds2 = dls([10^2],t)
-    s3,ds3 = dls([10^3],t)
-    s4,ds4 = dls([10^4],t)
-    s5,ds5 = dls([10^5],t)
-    
-    
-    st,sts = hp.ths.dls(t)
-    
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-    
-    ax1.set_xlabel(r'$t_{D}$')    
-    ax1.set_ylabel(r'$s_{D}$') 
-    
-    ax1.loglog(t,st, c='black')
-    ax1.loglog(t,s1, c='b')
-    ax1.loglog(t,ds1, c='b', linestyle = '--')
-    ax1.loglog(t,s2, c='r')
-    ax1.loglog(t,ds2, c='r', linestyle = '-.')
-    ax1.loglog(t,s3, c='g')
-    ax1.loglog(t,ds3, c='g', linestyle = ':')
-    ax1.loglog(t,s4, c='violet')
-    ax1.loglog(t,ds4, c='violet', linestyle = '--')
-    ax1.loglog(t,s5, c='y')
-    ax1.loglog(t,ds5, c='y', linestyle = '-.')    
-
-    
-                         
-    ax1.set_ylim(ymin=1e-3)
-    ax1.set_xlim(xmin=1e-2)
-        
-    plt.show()
-    
-    
-#Second figure
-
-
-    t = np.logspace(-1,3)
-    t1 = np.power(t,10^1)
-    t2 = np.power(t,10^2)
-    t3 = np.power(t,10^3)
-    t4 = np.power(t,10^4)
-    t5 = np.power(t,10^5)
-    
-    s1,ds1 = dls([10^1],t1)
-    s2,ds2 = dls([10^2],t2)
-    s3,ds3 = dls([10^3],t3)
-    s4,ds4 = dls([10^4],t4)
-    s5,ds5 = dls([10^5],t5)
-    
-    
-    
-    
-    fig = plt.figure()
-            
-    ax1 = fig.add_subplot(111)
-
-    
-    ax1.set_xlabel(r'$t_{D}$')    
-    ax1.set_ylabel(r'$s_{D}$') 
-    
-    ax1.loglog(t,st, c='black')
-    ax1.loglog(t,s1, c='b')
-    ax1.loglog(t,ds1, c='b', linestyle = '--')
-    ax1.loglog(t,s2, c='r')
-    ax1.loglog(t,ds2, c='r', linestyle = '-.')
-    ax1.loglog(t,s3, c='g')
-    ax1.loglog(t,ds3, c='g', linestyle = ':')
-    ax1.loglog(t,s4, c='violet')
-    ax1.loglog(t,ds4, c='violet', linestyle = '--')
-    ax1.loglog(t,s5, c='y')
-    ax1.loglog(t,ds5, c='y', linestyle = '-.')    
-
-    
-                         
-    ax1.set_ylim(ymin=1e-3)
-    ax1.set_xlim(xmin=1e-2)
-        
-    plt.show()
+#def drw():
+#    '''PCW_DRW - Draw the type curves of Papadopulos-Cooper (1967)
+#
+# Syntax: hp.pcw.drw()
+#
+# Description:
+#   Draw a series of type curves of Papadopulos-Cooper (1967)
+#
+#    Reference: Papadopulos, I.S., and H.H.J. Cooper. 1967. Drawdown in a
+#    well of large diameter. Water Resources Research 3, no. 1: 241-244. 
+#
+# See also: pcw_dim, pcw_dls
+#'''
+#
+##First figure    
+#    
+#    t = np.logspace(-2, 8)
+#    
+#    s1,ds1 = dls([10^1],t)
+#    s2,ds2 = dls([10^2],t)
+#    s3,ds3 = dls([10^3],t)
+#    s4,ds4 = dls([10^4],t)
+#    s5,ds5 = dls([10^5],t)
+#    
+#    
+#    st,sts = hp.ths.dls(t)
+#    
+#    fig = plt.figure()
+#            
+#    ax1 = fig.add_subplot(111)
+#
+#    
+#    ax1.set_xlabel(r'$t_{D}$')    
+#    ax1.set_ylabel(r'$s_{D}$') 
+#    
+#    ax1.loglog(t,st, c='black')
+#    ax1.loglog(t,s1, c='b')
+#    ax1.loglog(t,ds1, c='b', linestyle = '--')
+#    ax1.loglog(t,s2, c='r')
+#    ax1.loglog(t,ds2, c='r', linestyle = '-.')
+#    ax1.loglog(t,s3, c='g')
+#    ax1.loglog(t,ds3, c='g', linestyle = ':')
+#    ax1.loglog(t,s4, c='violet')
+#    ax1.loglog(t,ds4, c='violet', linestyle = '--')
+#    ax1.loglog(t,s5, c='y')
+#    ax1.loglog(t,ds5, c='y', linestyle = '-.')    
+#
+#    
+#                         
+#    ax1.set_ylim(ymin=1e-3)
+#    ax1.set_xlim(xmin=1e-2)
+#        
+#    plt.show()
+#    
+#    
+##Second figure
+#
+#
+#    t = np.logspace(-1,3)
+#    t1 = np.power(t,10^1)
+#    t2 = np.power(t,10^2)
+#    t3 = np.power(t,10^3)
+#    t4 = np.power(t,10^4)
+#    t5 = np.power(t,10^5)
+#    
+#    s1,ds1 = dls([10^1],t1)
+#    s2,ds2 = dls([10^2],t2)
+#    s3,ds3 = dls([10^3],t3)
+#    s4,ds4 = dls([10^4],t4)
+#    s5,ds5 = dls([10^5],t5)
+#    
+#    
+#    
+#    
+#    fig = plt.figure()
+#            
+#    ax1 = fig.add_subplot(111)
+#
+#    
+#    ax1.set_xlabel(r'$t_{D}$')    
+#    ax1.set_ylabel(r'$s_{D}$') 
+#    
+#    ax1.loglog(t,st, c='black')
+#    ax1.loglog(t,s1, c='b')
+#    ax1.loglog(t,ds1, c='b', linestyle = '--')
+#    ax1.loglog(t,s2, c='r')
+#    ax1.loglog(t,ds2, c='r', linestyle = '-.')
+#    ax1.loglog(t,s3, c='g')
+#    ax1.loglog(t,ds3, c='g', linestyle = ':')
+#    ax1.loglog(t,s4, c='violet')
+#    ax1.loglog(t,ds4, c='violet', linestyle = '--')
+#    ax1.loglog(t,s5, c='y')
+#    ax1.loglog(t,ds5, c='y', linestyle = '-.')    
+#
+#    
+#                         
+#    ax1.set_ylim(ymin=1e-3)
+#    ax1.set_xlim(xmin=1e-2)
+#        
+#    plt.show()
 
 
 
@@ -272,7 +274,7 @@ def drw():
 def gss(t,s):
     '''PCW_GSS - First guess for the parameters of the Papadopulos Cooper solution
 
- Syntax: p = pcw_gss(t,s)
+ Syntax: p = hp.pcw.gss(t,s)
 
    p(1) = a   = slope of Jacob straight line for late time
    p(2) = t0  = intercept of the Jacob straight line for late time
@@ -325,7 +327,7 @@ def gss(t,s):
 def rpt(p,t,s,d, name, ttle = 'Interference test', Author = 'My name',  Rapport = 'My Rapport', filetype = 'img'):
     '''PCW_RPT - Produces the final figure and results for the Papadopulos Cooper model
     
-    Syntax: pcw_rpt( p, t, s, d, ttle )
+    Syntax: hp.pcw.rpt( p, t, s, d, ttle )
     
     p(1) = a = slope of the late time straight line 
     p(2) = t0 = intersept of late time straight line 
